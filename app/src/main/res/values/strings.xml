@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">NetworkDJEDJEMEL/PADONOU</string>
+
+    <string name="reset_text">Renitialiser le réseau</string>
+
+    <string name="add_object_text">Ajout de noeuds</string>
+
+    <string name="add_connect_text">Ajout de connexion</string>
+
+    <string name="update_connect_text">Modifier une connexion</string>
+
+    <string name="update_object_text">Modifier un noeud</string>
+
+    <string name="plan_text">plan</string>
+</resources>

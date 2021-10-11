@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/reset_text" android:id="@+id/reset"/>
+
+    <item android:title="@string/add_connect_text" android:id="@+id/add_connect"/>
+
+    <item android:title="@string/add_object_text" android:id="@+id/add_object"/>
+
+    <item android:title="@string/update_object_text" android:id="@+id/update_object"/>
+
+    <item android:title="@string/update_connect_text" android:id="@+id/update_connect"/>
+</menu>
