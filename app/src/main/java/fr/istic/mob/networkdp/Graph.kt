@@ -8,15 +8,20 @@ import android.util.AttributeSet
 import android.view.View
 
 class Graph {
-    val g: HashMap<Noeud, HashSet<Noeud>?> = HashMap()
+    private val noeuds: ArrayList<Noeud> = ArrayList<Noeud>()
+    private val connexions: List<Connexion> = ArrayList<Connexion>()
+    //val g: HashMap<Noeud, HashSet<Noeud>?> = HashMap()
 
     /**
      * Methode pour ajouter un noeud
      */
     fun addNoeud(s: Noeud) {
-        if (!(g.containsKey(s))) {
-            g[s] = null
+        if (!(noeuds.contains(s))) {
+            noeuds.add(s)
         }
+    }
+    fun getNoeudList():ArrayList<Noeud>{
+        return this.noeuds
     }
     /**
      * Methode pour ajouter une connexion

@@ -5,8 +5,16 @@ import android.graphics.drawable.Drawable
 
 class DrawableGraph:Drawable {
     private lateinit var ga:Graph
+    private var  c:Canvas = Canvas()
+    val textPaint = Paint(Paint.LINEAR_TEXT_FLAG)
+    val rectp = Paint(Paint.LINEAR_TEXT_FLAG)
+
 
     constructor(ga: Graph) : super() {
+        rectp.style = Paint.Style.FILL
+        rectp.color = Color.RED
+        textPaint.color = Color.BLACK
+        textPaint.textSize = 100F
         this.ga = ga
     }
 
@@ -15,19 +23,19 @@ class DrawableGraph:Drawable {
     fun setGraph(g:Graph){
         this.ga = g
     }
+    fun drawNoeuds(n:ArrayList<Noeud>){
+        if(n.isNotEmpty()){
+            for (i in n){
+                c.drawCircle(i.getPosx(), i.getPosy(), 40F, rectp)
+                c.drawText(i.getTitre(), i.getPosx(), i.getPosy(), textPaint)
+            }
+        }
+
+    }
 
     override fun draw(p0: Canvas) {
-        val textPaint = Paint(Paint.LINEAR_TEXT_FLAG)
-        val rectp = Paint(Paint.LINEAR_TEXT_FLAG)
-        rectp.style = Paint.Style.FILL
-        rectp.color = Color.RED
-        textPaint.color = Color.BLACK
-        textPaint.textSize = 100F
-        // canvas.drawText("hey", 288F, 350F, textPaint)
-        for ((key, value) in ga.g) {
-            p0.drawCircle(key.getPosx(), key.getPosy(), 40F, rectp)
-            p0.drawText(key.getTitre(), key.getPosx(), key.getPosy(), textPaint)
-        }
+         this.c=p0
+        drawNoeuds(ga.getNoeudList())
     }
 
     override fun setAlpha(p0: Int) {
