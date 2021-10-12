@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         img =  findViewById<ImageView>(R.id.imageView)
-        ga = Graph(this)
+        ga = Graph()
         /**
          * Création du detector pour le mode ajout de connexion
          */
@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
                          */
                         val valsaisie = input.text.toString()
                         ga.addNoeud(Noeud(Xp,Yp,valsaisie))
+                        img.setImageDrawable(DrawableGraph(ga))
                         // val d = DrawableGraph(ga)
                         // ga.refreshDrawableState()
 

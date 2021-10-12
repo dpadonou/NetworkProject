@@ -4,9 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/plan"
     tools:context=".MainActivity">
-    <fr.istic.mob.networkdp.Graph android:layout_height="match_parent" android:layout_width="match_parent" android:background="@android:color/transparent"/>
 
-    <ImageView android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/imageView" app:srcCompat="@drawable/plan" android:longClickable="false"/>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:longClickable="false"
+        android:background="@drawable/plan" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
