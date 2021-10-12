@@ -9,7 +9,7 @@ import android.view.View
 
 class Graph {
     private val noeuds: ArrayList<Noeud> = ArrayList<Noeud>()
-    private val connexions: List<Connexion> = ArrayList<Connexion>()
+    private val connexions: ArrayList<Connexion> = ArrayList<Connexion>()
     //val g: HashMap<Noeud, HashSet<Noeud>?> = HashMap()
 
     /**
@@ -23,12 +23,23 @@ class Graph {
     fun getNoeudList():ArrayList<Noeud>{
         return this.noeuds
     }
+
     /**
      * Methode pour ajouter une connexion
      */
-    fun addConnexion(Source: Noeud, Destination: Noeud) {
-
+    fun addConnexion(c: Connexion) {
+        if (!(connexions.contains(c))) {
+            connexions.add(c)
+        }
     }
+    /**
+     * Methode pour retourner les connexions du graphe
+     */
+    fun getConnexionList():ArrayList<Connexion>{
+        return this.connexions
+    }
+
+
 
 
 }
