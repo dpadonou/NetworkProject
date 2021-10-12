@@ -11,7 +11,6 @@ class Noeud {
         this.posy=posy
     }
 
-
     fun getTitre(): String
     {
         return this.titre
