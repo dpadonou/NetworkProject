@@ -20,6 +20,15 @@ class Graph {
             noeuds.add(s)
         }
     }
+    fun getNoeud(x:Float,y:Float): Noeud? {
+        var no:Noeud? =null
+        for(n:Noeud in noeuds){
+           if((x>=n.getPosx()-30F && x<=n.getPosx()+30F) && (y>=n.getPosy()-30F && y<=n.getPosy()+30F)){
+                no = n
+            }
+        }
+        return no
+    }
     fun getNoeudList():ArrayList<Noeud>{
         return this.noeuds
     }

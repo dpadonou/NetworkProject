@@ -6,7 +6,7 @@
 
     <item android:title="@string/add_object_text" android:id="@+id/add_object"/>
 
-    <item android:title="@string/update_object_text" android:id="@+id/update_object"/>
+    <item android:title="@string/reading_text" android:id="@+id/reading_mode"/>
 
     <item android:title="@string/update_connect_text" android:id="@+id/update_connect"/>
 </menu>

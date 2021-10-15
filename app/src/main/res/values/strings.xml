@@ -9,7 +9,7 @@
 
     <string name="update_connect_text">Modifier une connexion</string>
 
-    <string name="update_object_text">Modifier un noeud</string>
+    <string name="reading_text">Mode Lecture</string>
 
     <string name="plan_text">plan</string>
 </resources>

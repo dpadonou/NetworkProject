@@ -24,4 +24,10 @@ class Noeud {
     {
         return this.posy
     }
+    fun setPosx(x:Float){
+        this.posx =x
+    }
+    fun setPosy(y:Float){
+        this.posy = y
+    }
 }

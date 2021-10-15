@@ -23,10 +23,10 @@ class Connexion {
     /**
      * getters and setters for fin
      */
-    fun setReceiver():Noeud{
+    fun getReceiver():Noeud{
         return this.fin
     }
-    private fun getReceiver(n:Noeud){
+   fun setReceiver(n:Noeud){
         this.debut= n
     }
 
