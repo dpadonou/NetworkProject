@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             //Lorsqu'on clique sur ajouter objet
             R.id.add_object -> {
+
                 this.title = "Graphs : Sommet addition mode"
                 mode = States.ADDING_NODE
                 //var valsaisie : String?
