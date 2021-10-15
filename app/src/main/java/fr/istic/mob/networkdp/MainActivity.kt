@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * Création du detector pour le mode ajout de noeud
          */
-        detect1 = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+      /*  detect1 = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
             override fun onLongPress(e: MotionEvent?) {
                 if (e != null) {
                     Xp = e.x
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-        })
+        })*/
     }
 
     /**
@@ -128,14 +128,60 @@ class MainActivity : AppCompatActivity() {
             R.id.add_object -> {
                 this.title = "Graphs : Sommet addition mode"
                 mode = States.ADDING_NODE
+                var time:Long = 0
                 //var valsaisie : String?
                 // val mydetect :GestureDetector = GestureDetector(this,GestureDetector())
                 /**
                  * implementation du listener
                  */
                 img.setOnTouchListener {
-                        _, event -> detect1.onTouchEvent(event)
+                        _, event ->
+                    //detect1.onTouchEvent(event)
+                    when(event.action){
+                        MotionEvent.ACTION_DOWN ->{
+                           time = System.currentTimeMillis()
+                        }
+                        MotionEvent.ACTION_UP ->{
+                            val time1 = System.currentTimeMillis()- time
+                            if(time1>=600){
+                                Xp = event.x
+                                Yp = event.y
+                                /**
+                                 * Création de la boite de dialogue et de ses actions
+                                 */
+                                val alertDialog = AlertDialog.Builder(this@MainActivity)
+                                val input = EditText(this@MainActivity)
+                                //input.hint = "hint"
+                                alertDialog.setTitle("title")
+                                alertDialog.setMessage("Entrez le nom de l'objet")
+                                alertDialog.setView(input)
+                                val positiveButton = alertDialog.setPositiveButton(
+                                    "Valider",
+                                    DialogInterface.OnClickListener { dialog, which ->
+                                        /**
+                                         * methode du bouton Valider
+                                         */
+                                        val valsaisie = input.text.toString()
+                                        ga.addNoeud(Noeud(Xp, Yp, valsaisie))
+                                        img.setImageDrawable(DrawableGraph(ga,null))
+                                        dialog.dismiss()
 
+                                    })
+                                alertDialog.setNegativeButton("Fermer", DialogInterface.OnClickListener { dialog, which ->
+                                    /**
+                                     * methode du bouton fermer de la boite de dialogue
+                                     */
+                                    dialog.dismiss()
+                                })
+                                /**
+                                 * Affichage de la boite de dialogue
+                                 */
+                                alertDialog.show()
+                            }
+                        }
+
+                    }
+                   true
                 }
 
 
@@ -228,6 +274,7 @@ class MainActivity : AppCompatActivity() {
             R.id.reset ->{
                 mode = States.RESET
                 ga = Graph()
+                //item.itemId = R.id.reading_mode
                 img.setImageDrawable(DrawableGraph(ga,null))
 
             }
