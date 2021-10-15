@@ -1,5 +1,7 @@
 package fr.istic.mob.networkdp
 
+import kotlinx.serialization.Serializable
+@Serializable
 class Noeud {
     private lateinit var titre : String
     private  var posx : Float = 0F

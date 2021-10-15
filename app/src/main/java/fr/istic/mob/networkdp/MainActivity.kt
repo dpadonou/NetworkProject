@@ -13,6 +13,14 @@ import android.view.MotionEvent
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.Json.Default.decodeFromString
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
     private  lateinit var  ga:Graph
@@ -29,86 +37,28 @@ class MainActivity : AppCompatActivity() {
     private var upy:Float = 0F
     private var mx:Float = 0F
     private var my:Float = 0F
-   // private lateinit var d:DrawableGraph
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         img =  findViewById<ImageView>(R.id.imageView)
-        ga = Graph()
-       // d = DrawableGraph(ga)
-        /**
-         * Création du detector pour le mode ajout de noeud
-         */
-      /*  detect1 = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
-            override fun onLongPress(e: MotionEvent?) {
-                if (e != null) {
-                    Xp = e.x
-                    Yp = e.y
-                    /**
-                     * Création de la boite de dialogue et de ses actions
-                     */
-                    val alertDialog = AlertDialog.Builder(this@MainActivity)
-                    val input = EditText(this@MainActivity)
-                    //input.hint = "hint"
-                    alertDialog.setTitle("title")
-                    alertDialog.setMessage("Entrez le nom de l'objet")
-                    alertDialog.setView(input)
-                    val positiveButton = alertDialog.setPositiveButton(
-                        "Valider",
-                        DialogInterface.OnClickListener { dialog, which ->
-                            /**
-                             * methode du bouton Valider
-                             */
-                            val valsaisie = input.text.toString()
-                            ga.addNoeud(Noeud(Xp, Yp, valsaisie))
-                            img.setImageDrawable(DrawableGraph(ga,null))
-                            dialog.dismiss()
+       /* try {
+            ga = gettofile()
+            img.setImageDrawable(DrawableGraph(ga,null))
+        }catch (e: IOException){
+            ga = Graph()
+            e.printStackTrace()
+            Log.e("MyActivity", "erreur de lecture de old_data")
+        }*/
 
-                        })
-                    alertDialog.setNegativeButton("Fermer", DialogInterface.OnClickListener { dialog, which ->
-                        /**
-                         * methode du bouton fermer de la boite de dialogue
-                         */
-                        dialog.dismiss()
-                    })
-                    /**
-                     * Affichage de la boite de dialogue
-                     */
-                    alertDialog.show()
-                }
-            }
-        })
-        /**
-         * Création du detector pour le mode ajout de connexion
-         */
-        detect2 = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
-            override fun onLongPress(e: MotionEvent?) {
-                when(e?.action){
-                    MotionEvent.ACTION_DOWN ->{
-                        downx = e?.x
-                        downy = e?.y
-                    }
-                    MotionEvent.ACTION_HOVER_MOVE ->{
-                        mx = e?.x
-                        my = e?.y
-                        val ndepart: Noeud? = ga.getNoeud(downx, downy)
-                        val nfin: Noeud = Noeud(mx, my, "")
-                        var c: Connexion?
-                        if (ndepart != null) {
-                            c = Connexion(ndepart, nfin)
-                            img.setImageDrawable(DrawableGraph(ga, c))
-                        }
-                    }
-                    MotionEvent.ACTION_UP ->{
-                        upx = e?.x
-                        upy = e?.y
-                    }
+     val old_data = this.getSharedPreferences("old_data", 0)
+        if (old_data != null) {
+            ga = Json.decodeFromString<Graph>("${old_data.getString("graph","").toString()}")
+        }else{
+            ga = Graph()
+        }
+        img.setImageDrawable(DrawableGraph(ga,null))
 
-                }
-            }
-
-        })*/
     }
 
     /**
@@ -129,8 +79,6 @@ class MainActivity : AppCompatActivity() {
                 this.title = "Graphs : Sommet addition mode"
                 mode = States.ADDING_NODE
                 var time:Long = 0
-                //var valsaisie : String?
-                // val mydetect :GestureDetector = GestureDetector(this,GestureDetector())
                 /**
                  * implementation du listener
                  */
@@ -143,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         MotionEvent.ACTION_UP ->{
                             val time1 = System.currentTimeMillis()- time
-                            if(time1>=600){
+                            if(time1>=1000){
                                 Xp = event.x
                                 Yp = event.y
                                 /**
@@ -188,6 +136,7 @@ class MainActivity : AppCompatActivity() {
             }
             //Lorsqu'on clique sur Modifier objet
             R.id.reading_mode ->{
+                item.setChecked(true)
                 this.title = "Graphs : Mode lecture"
                 mode = States.READING_MODE
                 var selectNoeud:Noeud? = null
@@ -217,9 +166,11 @@ class MainActivity : AppCompatActivity() {
             }
             //Lorsqu'on clique sur ajouter Connexion
             R.id.add_connect ->{
+                item.setChecked(true)
                 this.title = "Graphs : Arc addition mode"
                 mode = States.ADDING_CONNEXION
                 var ndepart: Noeud? = null
+                var ntp:Noeud? = null
                 lateinit var nfin: Noeud
                 img.setOnTouchListener { _, event ->
                     /*for (n:Noeud in ga.getNoeudList()){
@@ -235,6 +186,7 @@ class MainActivity : AppCompatActivity() {
                         MotionEvent.ACTION_UP ->{
                             upx = event.x
                             upy = event.y
+                            img.setImageDrawable(DrawableGraph(ga, null))
                             val nfintp: Noeud? = ga.getNoeud(upx, upy)
                             Log.i("","Up : ${nfintp.toString()}")
                             if (nfintp != null){
@@ -250,11 +202,11 @@ class MainActivity : AppCompatActivity() {
                             my = event.y
                             //Log.i("","Move : $mx - $my")
                             //Log.i("","ndepart : ${ndepart.toString()}")
-                            val ntp: Noeud = Noeud(mx, my, "")
+                             ntp = Noeud(mx, my, "")
                             Log.i("","Down : ${ntp.toString()}")
                             var c: Connexion?
                             if (ndepart != null) {
-                                c = Connexion(ndepart!!, ntp)
+                                c = Connexion(ndepart!!, ntp!!)
                                 img.setImageDrawable(DrawableGraph(ga, c))
                             }
                         }
@@ -266,23 +218,76 @@ class MainActivity : AppCompatActivity() {
 
             }
             //Lorsqu'on clique sur modifier connexion
-            R.id.update_connect ->{
-                this.title = "Graphs :mode modification"
+            R.id.update ->{
+                item.setChecked(true)
+                this.title = "Graphs :Update Mode"
                 mode = States.UPDATE_CONNEXION
             }
             //Lorsqu'on clique sur renitialiser le graphe
             R.id.reset ->{
                 mode = States.RESET
+                item.setChecked(true)
+                this.title = "NetworkDP"
                 ga = Graph()
                 //item.itemId = R.id.reading_mode
                 img.setImageDrawable(DrawableGraph(ga,null))
+               // Toast.makeText(this,"Selectionner un mode dans le menu",500F)
+
 
             }
-            else->super.onOptionsItemSelected(item)
         }
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Fonction pour ecrire le graphe dans un fichier old_data dans le cache
+     */
+    @Throws(IOException::class)
+    fun saveintofile(){
+        val outputStream: FileOutputStream = openFileOutput("old_data", MODE_PRIVATE)
+        val json = Json.encodeToString(ga)
+        outputStream.write(json.toByteArray())
+        outputStream.close()
+    }
+
+    /**
+     * Fonction pour recuperer le contenu de old_data
+     */
+    @Throws(IOException::class)
+    fun gettofile():Graph{
+        var value: String? = null
+        val inputStream: FileInputStream = openFileInput("old_data")
+        if(inputStream != null){
+            val stringb = StringBuilder()
+            var content: Int
+            while (inputStream.read().also { content = it } != -1) {
+                value = stringb.append(content.toChar()).toString()
+            }
+            val ga:Graph = Json.decodeFromString<Graph>("$value")
+            return ga
+        }else{
+            return Graph()
+        }
+
+
+
+    }
+    override fun onStop() {
+        super.onStop()
+       /* try {
+            saveintofile()
+        }catch (e: IOException){
+            e.printStackTrace()
+            Log.e("MyActivity", "erreur d'ecriture de old_data")
+        }*/
+
+        //creation et ecriture des données partagées
+        val old_operation = this.getSharedPreferences("old_data", 0)
+        val editor = old_operation.edit()
+        val json = Json.encodeToString(ga)
+        editor.putString("graph", json)
+        editor.apply()
+    }
 
 
 }

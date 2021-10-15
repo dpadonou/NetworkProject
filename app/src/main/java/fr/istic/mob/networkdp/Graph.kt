@@ -6,8 +6,10 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-
+import kotlinx.serialization.Serializable
+@Serializable
 class Graph {
+    //@SerializedName("nodes")
     private val noeuds: ArrayList<Noeud> = ArrayList<Noeud>()
     private val connexions: ArrayList<Connexion> = ArrayList<Connexion>()
     //val g: HashMap<Noeud, HashSet<Noeud>?> = HashMap()
@@ -32,7 +34,6 @@ class Graph {
     fun getNoeudList():ArrayList<Noeud>{
         return this.noeuds
     }
-
     /**
      * Methode pour ajouter une connexion
      */

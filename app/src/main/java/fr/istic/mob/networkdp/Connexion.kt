@@ -1,5 +1,7 @@
 package fr.istic.mob.networkdp
 
+import kotlinx.serialization.Serializable
+@Serializable
 class Connexion {
     private lateinit var debut:Noeud
     private lateinit var  fin:Noeud
