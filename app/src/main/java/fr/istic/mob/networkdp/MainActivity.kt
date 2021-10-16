@@ -37,11 +37,15 @@ class MainActivity : AppCompatActivity() {
     private var upy:Float = 0F
     private var mx:Float = 0F
     private var my:Float = 0F
+    private  var planx:Float = 0F
+    private  var plany:Float = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         img =  findViewById<ImageView>(R.id.imageView)
+        planx = img.height.toFloat()
+        plany = img.width.toFloat()
        /* try {
             ga = gettofile()
             img.setImageDrawable(DrawableGraph(ga,null))
@@ -51,13 +55,27 @@ class MainActivity : AppCompatActivity() {
             Log.e("MyActivity", "erreur de lecture de old_data")
         }*/
 
+
      val old_data = this.getSharedPreferences("old_data", 0)
         if (old_data != null) {
             ga = Json.decodeFromString<Graph>("${old_data.getString("graph","").toString()}")
+            val m:States? = Json.decodeFromString<States>("${old_data.getString("mode","").toString()}")
+           if(m != null){
+                mode = m
+                faire(mode)
+                img.setImageDrawable(DrawableGraph(ga,null))
+            }else{
+                faire(mode)
+                img.setImageDrawable(DrawableGraph(ga,null))
+            }
+            //img.setImageDrawable(DrawableGraph(ga,null))
+
         }else{
             ga = Graph()
+            img.setImageDrawable(DrawableGraph(ga,null))
+            //faire(mode)
         }
-        img.setImageDrawable(DrawableGraph(ga,null))
+
 
     }
 
@@ -76,18 +94,100 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             //Lorsqu'on clique sur ajouter objet
             R.id.add_object -> {
-                this.title = "Graphs : Sommet addition mode"
-                mode = States.ADDING_NODE
+            mode = States.ADDING_NODE
+            faire(mode)
+            }
+            //Lorsqu'on clique sur Modifier objet
+            R.id.reading_mode ->{
+                mode = States.READING_MODE
+                faire(mode)
+            }
+            //Lorsqu'on clique sur ajouter Connexion
+            R.id.add_connect ->{
+                mode = States.ADDING_CONNEXION
+                faire(mode)
+            }
+            //Lorsqu'on clique sur modifier connexion
+            R.id.update ->{
+                mode = States.UPDATE_MODE
+                faire(mode)
+            }
+            //Lorsqu'on clique sur renitialiser le graphe
+            R.id.reset ->{
+                mode = States.RESET
+                faire(mode)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    /** Gerer les modes **/
+    fun faire(m:States){
+        when(m){
+            States.ADDING_CONNEXION ->{
+                val sb = StringBuilder()
+                sb.append(resources.getString(R.string.app_name)).append(" - CONNEXION ADDING  Mode")
+                this.title = sb.toString()
+                var ndepart: Noeud? = null
+                var ntp:Noeud? = null
+                lateinit var nfin: Noeud
+                img.setOnTouchListener { _, event ->
+                    /*for (n:Noeud in ga.getNoeudList()){
+                        Log.i("","Noeud : ${n.getPosx()} - ${n.getPosy()}")
+                    }*/
+                    when(event.action){
+                        MotionEvent.ACTION_DOWN ->{
+                            downx = event.x
+                            downy = event.y
+                            ndepart= ga.getNoeud(downx, downy)
+                            Log.i("","Down : ${ndepart.toString()}")
+                        }
+                        MotionEvent.ACTION_UP ->{
+                            upx = event.x
+                            upy = event.y
+                            img.setImageDrawable(DrawableGraph(ga, null))
+                            val nfintp: Noeud? = ga.getNoeud(upx, upy)
+                            Log.i("","Up : ${nfintp.toString()}")
+                            if (nfintp != null){
+                                nfin = nfintp
+                                img.invalidate()
+                                ga.addConnexion(Connexion(ndepart!!,nfin))
+                                img.setImageDrawable(DrawableGraph(ga,null))
+                            }
+                            Log.i("","Up: $upx - $upy")
+                        }
+                        MotionEvent.ACTION_MOVE ->{
+                            mx = event.x
+                            my = event.y
+                            //Log.i("","Move : $mx - $my")
+                            //Log.i("","ndepart : ${ndepart.toString()}")
+                            ntp = Noeud(mx, my, "")
+                            Log.i("","Down : ${ntp.toString()}")
+                            var c: Connexion?
+                            if (ndepart != null) {
+                                c = Connexion(ndepart!!, ntp!!)
+                                img.setImageDrawable(DrawableGraph(ga, c))
+                            }
+                        }
+
+                    }
+                    true
+                    //detect2.onTouchEvent(event)
+                }
+
+            }
+            States.ADDING_NODE ->{
+                val sb = StringBuilder()
+                sb.append(resources.getString(R.string.app_name)).append("- NODE ADDING Mode")
+                this.title = sb.toString()
+                this.title = sb.toString()
+                this.title = sb.toString()
                 var time:Long = 0
-                /**
-                 * implementation du listener
-                 */
                 img.setOnTouchListener {
                         _, event ->
                     //detect1.onTouchEvent(event)
                     when(event.action){
                         MotionEvent.ACTION_DOWN ->{
-                           time = System.currentTimeMillis()
+                            time = System.currentTimeMillis()
                         }
                         MotionEvent.ACTION_UP ->{
                             val time1 = System.currentTimeMillis()- time
@@ -129,16 +229,22 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     }
-                   true
+                    true
                 }
 
 
             }
-            //Lorsqu'on clique sur Modifier objet
-            R.id.reading_mode ->{
-                item.setChecked(true)
-                this.title = "Graphs : Mode lecture"
-                mode = States.READING_MODE
+            States.UPDATE_MODE ->{
+                val sb = StringBuilder()
+                sb.append(resources.getString(R.string.app_name)).append(" - Update Mode")
+                this.title = sb.toString()
+                 //Rien pour le moment
+
+            }
+            States.READING_MODE ->{
+                val sb = StringBuilder()
+                sb.append(resources.getString(R.string.app_name)).append(" - READING MODE")
+                this.title = sb.toString()
                 var selectNoeud:Noeud? = null
                 img.setOnTouchListener { _, event ->
 
@@ -163,85 +269,19 @@ class MainActivity : AppCompatActivity() {
                     true
                     //detect2.onTouchEvent(event)
                 }
-            }
-            //Lorsqu'on clique sur ajouter Connexion
-            R.id.add_connect ->{
-                item.setChecked(true)
-                this.title = "Graphs : Arc addition mode"
-                mode = States.ADDING_CONNEXION
-                var ndepart: Noeud? = null
-                var ntp:Noeud? = null
-                lateinit var nfin: Noeud
-                img.setOnTouchListener { _, event ->
-                    /*for (n:Noeud in ga.getNoeudList()){
-                        Log.i("","Noeud : ${n.getPosx()} - ${n.getPosy()}")
-                    }*/
-                    when(event.action){
-                        MotionEvent.ACTION_DOWN ->{
-                            downx = event.x
-                            downy = event.y
-                            ndepart= ga.getNoeud(downx, downy)
-                            Log.i("","Down : ${ndepart.toString()}")
-                        }
-                        MotionEvent.ACTION_UP ->{
-                            upx = event.x
-                            upy = event.y
-                            img.setImageDrawable(DrawableGraph(ga, null))
-                            val nfintp: Noeud? = ga.getNoeud(upx, upy)
-                            Log.i("","Up : ${nfintp.toString()}")
-                            if (nfintp != null){
-                                nfin = nfintp
-                                img.invalidate()
-                                ga.addConnexion(Connexion(ndepart!!,nfin))
-                                img.setImageDrawable(DrawableGraph(ga,null))
-                            }
-                            Log.i("","Up: $upx - $upy")
-                        }
-                        MotionEvent.ACTION_MOVE ->{
-                            mx = event.x
-                            my = event.y
-                            //Log.i("","Move : $mx - $my")
-                            //Log.i("","ndepart : ${ndepart.toString()}")
-                             ntp = Noeud(mx, my, "")
-                            Log.i("","Down : ${ntp.toString()}")
-                            var c: Connexion?
-                            if (ndepart != null) {
-                                c = Connexion(ndepart!!, ntp!!)
-                                img.setImageDrawable(DrawableGraph(ga, c))
-                            }
-                        }
-
-                    }
-                    true
-                    //detect2.onTouchEvent(event)
-                }
 
             }
-            //Lorsqu'on clique sur modifier connexion
-            R.id.update ->{
-                item.setChecked(true)
-                this.title = "Graphs :Update Mode"
-                mode = States.UPDATE_CONNEXION
-            }
-            //Lorsqu'on clique sur renitialiser le graphe
-            R.id.reset ->{
-                mode = States.RESET
-                item.setChecked(true)
-                this.title = "NetworkDP"
+            States.RESET ->{
+                this.title = resources.getString(R.string.app_name)
                 ga = Graph()
                 //item.itemId = R.id.reading_mode
                 img.setImageDrawable(DrawableGraph(ga,null))
-               // Toast.makeText(this,"Selectionner un mode dans le menu",500F)
-
-
+                // Toast.makeText(this,"Selectionner un mode dans le menu",500F)
             }
         }
-        return super.onOptionsItemSelected(item)
     }
 
-    /**
-     * Fonction pour ecrire le graphe dans un fichier old_data dans le cache
-     */
+    /** Fonction pour ecrire le graphe dans un fichier old_data dans le cache **/
     @Throws(IOException::class)
     fun saveintofile(){
         val outputStream: FileOutputStream = openFileOutput("old_data", MODE_PRIVATE)
@@ -286,6 +326,7 @@ class MainActivity : AppCompatActivity() {
         val editor = old_operation.edit()
         val json = Json.encodeToString(ga)
         editor.putString("graph", json)
+        editor.putString("mode", Json.encodeToString(mode))
         editor.apply()
     }
 
