@@ -1,13 +1,12 @@
 package fr.istic.mob.networkdp
 
 import kotlinx.serialization.Serializable
-@Serializable
-class Connexion {
-    private lateinit var debut:Noeud
-    private lateinit var  fin:Noeud
-    constructor()
 
-    constructor(debut: Noeud, fin: Noeud) {
+@Serializable
+class Connexion(private var debut: Node) {
+    private lateinit var fin: Node
+
+    constructor(debut: Node, fin: Node) : this(debut) {
         this.debut = debut
         this.fin = fin
     }
@@ -15,21 +14,14 @@ class Connexion {
     /**
      * getters and setters for debut
      */
-    fun getEmetteur():Noeud{
+    fun getEmitter(): Node {
         return this.debut
-    }
-    private fun setEmetteur(n:Noeud){
-        this.debut= n
     }
 
     /**
      * getters and setters for fin
      */
-    fun getReceiver():Noeud{
+    fun getReceiver(): Node {
         return this.fin
     }
-   fun setReceiver(n:Noeud){
-        this.debut= n
-    }
-
 }
