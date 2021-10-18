@@ -204,6 +204,7 @@ class MainActivity : AppCompatActivity() {
                             if (time1 >= 600) {
                                 xP = event.x
                                 yP = event.y
+                                if((xP>=30F && xP<=imgWidth-30F) && (yP>=30F && yP<=imgHeight-30F) ){
                                 //Création de la boite de dialogue et de ses actions
                               //  if((xP>=30F && xP<=imgWidth-30F) && (yP>=30F && yP<=imgHeight-30F) ){
                                 val alertDialog = AlertDialog.Builder(this@MainActivity)
@@ -229,6 +230,10 @@ class MainActivity : AppCompatActivity() {
                                 }
                                 alertDialog.show()
                                // }
+                            }else{
+                                    Toast.makeText(this,"restez dans le cadre",Toast.LENGTH_LONG).show()
+
+                                }
                             }
                         }
                     }
