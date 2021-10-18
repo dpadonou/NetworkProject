@@ -1,22 +1,22 @@
 <resources>
-    <string name="app_name">NetworkDP</string>
+    <string name="app_name" translatable="false">NetworkDP</string>
 
-    <string name="reset_text" translatable="false">Renitialiser le réseau</string>
+    <string name="reset_text" >Renitialiser le reseau</string>
 
-    <string name="add_object_text" translatable="false">Mode d\'ajout de noeuds</string>
+    <string name="add_object_text">Mode d\'ajout de noeuds</string>
 
-    <string name="add_connect_text" translatable="false">Mode d\'ajout de connexion</string>
+    <string name="add_connect_text">Mode d\'ajout de connexion</string>
 
-    <string name="update" translatable="false">Mode modification</string>
+    <string name="update">Mode modification</string>
 
-    <string name="reading_text" translatable="false">Mode Lecture</string>
+    <string name="reading_text">Mode Lecture</string>
 
-    <string name="noeud_etiquette" translatable="false">Etiquette du noeud</string>
+    <string name="noeud_etiquette">Etiquette du noeud</string>
 
-    <string name="dialog_text" translatable="false">Entrez le libellé de l\'etiquette du noeud</string>
+    <string name="dialog_text">Entrez le libelle de l\'etiquette du noeud</string>
 
-    <string name="valider_text" translatable="false">Valider</string>
-    <string name="annuler_text" translatable="false">Annuler</string>
+    <string name="valider_text">Valider</string>
+    <string name="annuler_text">Annuler</string>
 
-    <string name="plan_text" translatable="false">plan</string>
+    <string name="plan_text">plan</string>
 </resources>

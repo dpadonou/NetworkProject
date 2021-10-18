@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NetworkDP</string>
+    <string name="reset_text" >Reset the network</string>
+
+    <string name="add_object_text">Adding node mode</string>
+
+    <string name="add_connect_text">Add connection mode</string>
+
+    <string name="update">Update mode</string>
+
+    <string name="reading_text">Reading mode</string>
+
+    <string name="noeud_etiquette">node label</string>
+
+    <string name="dialog_text">Enter the label of the node</string>
+
+    <string name="valider_text">Save</string>
+    <string name="annuler_text">Cancel</string>
+
+    <string name="plan_text">plan</string>
 </resources>
