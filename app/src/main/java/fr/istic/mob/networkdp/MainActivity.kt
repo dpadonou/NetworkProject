@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
             States.ADDING_CONNEXION -> {
                 val sb = StringBuilder()
                 sb.append(resources.getString(R.string.app_name))
-                    .append(" - CONNEXION ADDING  Mode")
+                    .append(" - "+ resources.getString(R.string.add_object_text))
                 this.title = sb.toString()
                 var ndepart: Node? = null
                 var ntp: Node?
@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
             }
             States.ADDING_NODE -> {
                 val sb = StringBuilder()
-                sb.append(resources.getString(R.string.app_name)).append("- NODE ADDING Mode")
+                sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.add_connect_text))
                 this.title = sb.toString()
                 this.title = sb.toString()
                 this.title = sb.toString()
@@ -170,17 +170,17 @@ class MainActivity : AppCompatActivity() {
                                 //Création de la boite de dialogue et de ses actions
                                 val alertDialog = AlertDialog.Builder(this@MainActivity)
                                 val input = EditText(this@MainActivity)
-                                alertDialog.setTitle("title")
-                                alertDialog.setMessage("Entrez le nom de l'objet")
+                                alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
+                                alertDialog.setMessage(resources.getString(R.string.dialog_text))
                                 alertDialog.setView(input)
-                                alertDialog.setPositiveButton("Valider") { dialog, _ ->
+                                alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
                                     //methode du bouton Valider
                                     val valsaisie = input.text.toString()
                                     ga.addNode(Node(xP, yP, valsaisie))
                                     img.setImageDrawable(DrawableGraph(ga, null))
                                     dialog.dismiss()
                                 }
-                                alertDialog.setNegativeButton("Fermer") { dialog, _ ->
+                                alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
                                     dialog.dismiss()
                                 }
                                 alertDialog.show()
@@ -192,12 +192,12 @@ class MainActivity : AppCompatActivity() {
             }
             States.UPDATE_MODE -> {
                 val sb = StringBuilder()
-                sb.append(resources.getString(R.string.app_name)).append(" - Update Mode")
+                sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.update))
                 this.title = sb.toString()
             }
             States.READING_MODE -> {
                 val sb = StringBuilder()
-                sb.append(resources.getString(R.string.app_name)).append(" - READING MODE")
+                sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.reading_text))
                 this.title = sb.toString()
                 var selectNode: Node? = null
                 img.setOnTouchListener { _, event ->
