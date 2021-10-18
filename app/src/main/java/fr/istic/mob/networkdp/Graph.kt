@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 class Graph {
     private val nodes: ArrayList<Node> = ArrayList()
     private val connexions: ArrayList<Connexion> = ArrayList()
+    var tmpConnexion:Connexion? = null
 
     /**
      * Methode pour ajouter un noeud

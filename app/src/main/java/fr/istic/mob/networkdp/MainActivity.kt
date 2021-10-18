@@ -16,6 +16,9 @@ import kotlinx.serialization.json.Json
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import android.view.ViewTreeObserver
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var ga: Graph
@@ -29,32 +32,51 @@ class MainActivity : AppCompatActivity() {
     private var upy: Float = 0F
     private var mx: Float = 0F
     private var my: Float = 0F
-    private var planX: Float = 0F
-    private var planY: Float = 0F
+    private var imgHeight: Float = 0F
+    private var imgWidth: Float = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         img = findViewById(R.id.imageView)
-        planX = img.height.toFloat()
-        planY = img.width.toFloat()
-        ga = Graph()
 
-        /*val oldData = this.getSharedPreferences("old_data", 0)
+        //imgWidth = img.measuredWidth.toFloat()
+        ga = Graph()
+        val d = DrawableGraph(ga)
+
+        img.viewTreeObserver.addOnGlobalLayoutListener(OnGlobalLayoutListener {
+            imgWidth = img.measuredWidth.toFloat()
+            imgHeight = img.measuredHeight.toFloat()
+        })
+        img.setImageDrawable(d)
+         try {
+           ga = gettofile()
+           img.setImageDrawable(DrawableGraph(ga))
+       }catch (e: IOException){
+           ga = Graph()
+           e.printStackTrace()
+           Log.e("MyActivity", "erreur de lecture de old_data")
+       }
+
+        //imgWidth = img.measuredWidth.toFloat()
+        //imgHeight = img.measuredHeight.toFloat()
+
+
+       /* val oldData = this.getSharedPreferences("old", 0)
         if (oldData != null) {
             ga = Json.decodeFromString(oldData.getString("graph", "").toString())
             val m: States? = Json.decodeFromString<States>(oldData.getString("mode", "").toString())
             if (m != null) {
                 mode = m
                 faire(mode)
-                img.setImageDrawable(DrawableGraph(ga, null))
+                img.setImageDrawable(DrawableGraph(ga))
             } else {
                 faire(mode)
-                img.setImageDrawable(DrawableGraph(ga, null))
+                img.setImageDrawable(DrawableGraph(ga))
             }
         } else {
             ga = Graph()
-            img.setImageDrawable(DrawableGraph(ga, null))
+            img.setImageDrawable(DrawableGraph(ga))
         }*/
     }
 
@@ -108,10 +130,11 @@ class MainActivity : AppCompatActivity() {
             States.ADDING_CONNEXION -> {
                 val sb = StringBuilder()
                 sb.append(resources.getString(R.string.app_name))
-                    .append(" - "+ resources.getString(R.string.add_object_text))
+                    .append(" - "+ resources.getString(R.string.add_connect_text))
                 this.title = sb.toString()
                 var ndepart: Node? = null
                 var ntp: Node?
+                var tmpconnexion: Connexion?
                 lateinit var nfin: Node
                 img.setOnTouchListener { _, event ->
                     when (event.action) {
@@ -124,14 +147,16 @@ class MainActivity : AppCompatActivity() {
                         MotionEvent.ACTION_UP -> {
                             upx = event.x
                             upy = event.y
-                            img.setImageDrawable(DrawableGraph(ga, null))
+                            ga.tmpConnexion = null
+                           // img.setImageDrawable(DrawableGraph(ga))
+                            img.invalidate()
                             val nfintp: Node? = ga.getNode(upx, upy)
                             Log.i("", "Up : ${nfintp.toString()}")
                             if (nfintp != null) {
                                 nfin = nfintp
-                                img.invalidate()
                                 ga.addConnexion(Connexion(ndepart!!, nfin))
-                                img.setImageDrawable(DrawableGraph(ga, null))
+                                img.invalidate()
+                               // img.setImageDrawable(DrawableGraph(ga))
                             }
                             Log.i("", "Up: $upx - $upy")
                         }
@@ -142,8 +167,9 @@ class MainActivity : AppCompatActivity() {
 //                            Log.i("", "Down : ${ntp.toString()}")
                             val c: Connexion?
                             if (ndepart != null) {
-                                c = Connexion(ndepart!!, ntp!!)
-                                img.setImageDrawable(DrawableGraph(ga, c))
+                                ga.tmpConnexion = Connexion(ndepart!!, ntp!!)
+                                img.invalidate()
+                                //img.setImageDrawable(DrawableGraph(ga))
                             }
                         }
                     }
@@ -152,7 +178,7 @@ class MainActivity : AppCompatActivity() {
             }
             States.ADDING_NODE -> {
                 val sb = StringBuilder()
-                sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.add_connect_text))
+                sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.add_object_text))
                 this.title = sb.toString()
                 this.title = sb.toString()
                 this.title = sb.toString()
@@ -164,10 +190,11 @@ class MainActivity : AppCompatActivity() {
                         }
                         MotionEvent.ACTION_UP -> {
                             val time1 = System.currentTimeMillis() - time
-                            if (time1 >= 1000) {
+                            if (time1 >= 600) {
                                 xP = event.x
                                 yP = event.y
                                 //Création de la boite de dialogue et de ses actions
+                              //  if((xP>=30F && xP<=imgWidth-30F) && (yP>=30F && yP<=imgHeight-30F) ){
                                 val alertDialog = AlertDialog.Builder(this@MainActivity)
                                 val input = EditText(this@MainActivity)
                                 alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
@@ -177,13 +204,15 @@ class MainActivity : AppCompatActivity() {
                                     //methode du bouton Valider
                                     val valsaisie = input.text.toString()
                                     ga.addNode(Node(xP, yP, valsaisie))
-                                    img.setImageDrawable(DrawableGraph(ga, null))
+                                    //img.invalidate()
+                                    img.setImageDrawable(DrawableGraph(ga))
                                     dialog.dismiss()
                                 }
                                 alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
                                     dialog.dismiss()
                                 }
                                 alertDialog.show()
+                               // }
                             }
                         }
                     }
@@ -210,12 +239,15 @@ class MainActivity : AppCompatActivity() {
                         MotionEvent.ACTION_MOVE -> {
                             mx = event.x
                             my = event.y
-                            if (selectNode != null) {
-                                selectNode!!.setPosY(my)
-                                selectNode!!.setPosX(mx)
-                                img.invalidate()
-                                img.setImageDrawable(DrawableGraph(ga, null))
+                            if((mx>=30F && mx<=imgWidth-30F) && (my>=30F && my<=imgHeight-30F) ){
+                                if (selectNode != null) {
+                                    selectNode!!.setPosY(my)
+                                    selectNode!!.setPosX(mx)
+                                    img.invalidate()
+                                    // img.setImageDrawable(DrawableGraph(ga))
+                                }
                             }
+
                         }
                     }
                     true
@@ -224,7 +256,7 @@ class MainActivity : AppCompatActivity() {
             States.RESET -> {
                 this.title = resources.getString(R.string.app_name)
                 ga = Graph()
-                img.setImageDrawable(DrawableGraph(ga, null))
+                img.setImageDrawable(DrawableGraph(ga))
             }
         }
     }
@@ -257,8 +289,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        try {
+           saveintofile()
+       }catch (e: IOException){
+           e.printStackTrace()
+           Log.e("MyActivity", "erreur d'ecriture de old_data")
+       }
+
+
         //creation et ecriture des données partagées
-       /* val oldOperation = this.getSharedPreferences("old_data", 0)
+      /* val oldOperation = this.getSharedPreferences("old", 0)
         val editor = oldOperation.edit()
         val json = Json.encodeToString(ga)
         editor.putString("graph", json)

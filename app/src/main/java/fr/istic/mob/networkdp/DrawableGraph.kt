@@ -3,9 +3,8 @@ package fr.istic.mob.networkdp
 import android.graphics.*
 import android.graphics.drawable.Drawable
 
-class DrawableGraph(private var ga: Graph, c: Connexion?) : Drawable() {
+class DrawableGraph(private var ga: Graph) : Drawable() {
     private var c: Canvas = Canvas()
-    private var tempConnexion: Connexion? = c
     private val textPaint = Paint(Paint.LINEAR_TEXT_FLAG)
     private val rectPaint = Paint(Paint.LINEAR_TEXT_FLAG)
     private val pathPaint = Paint(Paint.FAKE_BOLD_TEXT_FLAG)
@@ -43,7 +42,7 @@ class DrawableGraph(private var ga: Graph, c: Connexion?) : Drawable() {
         }
     }
 
-    private fun drawTempConnexion() {
+    private fun drawTempConnexion(tempConnexion:Connexion?) {
         if (tempConnexion != null) {
             c.drawLine(
                 tempConnexion!!.getEmitter().getPosX(),
@@ -58,7 +57,7 @@ class DrawableGraph(private var ga: Graph, c: Connexion?) : Drawable() {
     override fun draw(p0: Canvas) {
         this.c = p0
         drawNodes(ga.getNodeList())
-        drawTempConnexion()
+        drawTempConnexion(ga.tmpConnexion)
         drawConnexions(ga.getConnexionList())
     }
 
