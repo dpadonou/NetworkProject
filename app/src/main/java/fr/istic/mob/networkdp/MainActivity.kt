@@ -2,6 +2,7 @@ package fr.istic.mob.networkdp
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -18,6 +19,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.Toast
 
 
 class MainActivity : AppCompatActivity() {
@@ -42,25 +44,36 @@ class MainActivity : AppCompatActivity() {
 
         //imgWidth = img.measuredWidth.toFloat()
         ga = Graph()
-        val d = DrawableGraph(ga)
+
 
         img.viewTreeObserver.addOnGlobalLayoutListener(OnGlobalLayoutListener {
             imgWidth = img.measuredWidth.toFloat()
             imgHeight = img.measuredHeight.toFloat()
         })
-        img.setImageDrawable(d)
-         try {
-           ga = gettofile()
-           img.setImageDrawable(DrawableGraph(ga))
-       }catch (e: IOException){
-           ga = Graph()
-           e.printStackTrace()
-           Log.e("MyActivity", "erreur de lecture de old_data")
-       }
+        if(savedInstanceState!=null){
+            val json = savedInstanceState.getSerializable("graph")
+            val json2 = savedInstanceState.getSerializable("mode")
+            ga = Json.decodeFromString("$json")
+            mode = Json.decodeFromString("$json2")
+            img.invalidate()
+            val d = DrawableGraph(ga)
+            img.setImageDrawable(d)
+            faire(mode)
+        }else{
+            val d = DrawableGraph(ga)
+            img.setImageDrawable(d)
+        }
 
-        //imgWidth = img.measuredWidth.toFloat()
-        //imgHeight = img.measuredHeight.toFloat()
 
+           /* try {
+                ga = gettofile()
+                img.setImageDrawable(DrawableGraph(ga))
+            }catch (e: IOException){
+                ga = Graph()
+                e.printStackTrace()
+                Log.e("MyActivity", "erreur de lecture de old_data")
+            }*/
+       ///////////////////
 
        /* val oldData = this.getSharedPreferences("old", 0)
         if (oldData != null) {
@@ -180,8 +193,6 @@ class MainActivity : AppCompatActivity() {
                 val sb = StringBuilder()
                 sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.add_object_text))
                 this.title = sb.toString()
-                this.title = sb.toString()
-                this.title = sb.toString()
                 var time: Long = 0
                 img.setOnTouchListener { _, event ->
                     when (event.action) {
@@ -203,9 +214,14 @@ class MainActivity : AppCompatActivity() {
                                 alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
                                     //methode du bouton Valider
                                     val valsaisie = input.text.toString()
-                                    ga.addNode(Node(xP, yP, valsaisie))
-                                    //img.invalidate()
-                                    img.setImageDrawable(DrawableGraph(ga))
+                                    if(ga.getNode(xP,yP) == null){
+                                        ga.addNode(Node(xP, yP, valsaisie))
+                                        //img.invalidate()
+                                        img.setImageDrawable(DrawableGraph(ga))
+
+                                    }else{
+                                        Toast.makeText(this,"Vous ne pouvez dessiner au meme emplacement",Toast.LENGTH_LONG).show()
+                                    }
                                     dialog.dismiss()
                                 }
                                 alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
@@ -287,14 +303,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+
+        val json = Json.encodeToString(ga)
+        val json2 = Json.encodeToString(mode)
+        outState.putSerializable("graph",json)
+        outState.putSerializable("mode",json2)
+        super.onSaveInstanceState(outState)
+    }
     override fun onStop() {
         super.onStop()
-        try {
+      /*  try {
            saveintofile()
        }catch (e: IOException){
            e.printStackTrace()
            Log.e("MyActivity", "erreur d'ecriture de old_data")
-       }
+       }*/
 
 
         //creation et ecriture des données partagées
