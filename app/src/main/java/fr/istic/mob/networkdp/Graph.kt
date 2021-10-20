@@ -4,9 +4,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class Graph {
+    private var titre:String = ""
     private val nodes: ArrayList<Node> = ArrayList()
     private val connexions: ArrayList<Connexion> = ArrayList()
     var tmpConnexion:Connexion? = null
+
+    constructor(titre: String) {
+        this.titre = titre
+    }
 
     /**
      * Methode pour ajouter un noeud
@@ -45,5 +50,12 @@ class Graph {
      */
     fun getConnexionList(): ArrayList<Connexion> {
         return this.connexions
+    }
+
+    /** methode pour renitialiser le graphe **/
+    fun reset(){
+        this.connexions.clear()
+        this.nodes.clear()
+        this.tmpConnexion = null
     }
 }

@@ -12,11 +12,21 @@
     <string name="reading_text">Mode Lecture</string>
 
     <string name="noeud_etiquette">Etiquette du noeud</string>
+    <string name="graph_title">Titre du graphe</string>
 
-    <string name="dialog_text">Entrez le libelle de l\'etiquette du noeud</string>
+    <string name="dialognode_text">Entrez le libelle de l\'etiquette du noeud</string>
+    <string name="dialognode_msg">Vous ne pouvez dessiner au meme emplacement</string>
+
+
+    <string name="dialoggraph_text">Entrez le nom de votre graph</string>
+    <string name="dialoggraph_msg">Gardez bien ce nom il permettra d\'enregistrer votre graphe si necessaire</string>
 
     <string name="valider_text">Valider</string>
     <string name="annuler_text">Annuler</string>
 
     <string name="plan_text">plan</string>
+    <string name="sauvegarder_le_graphe">Sauvegarder le graphe</string>
+    <string name="import_graph">Afficher un graphe sauvegardé</string>
+    <string name="import_plan">Importer d\'autres plans</string>
+    <string name="envoyer_la_capture_du_graphe">Envoyer la capture du graphe</string>
 </resources>

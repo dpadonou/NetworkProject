@@ -41,9 +41,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         img = findViewById(R.id.imageView)
-
-        //imgWidth = img.measuredWidth.toFloat()
-        ga = Graph()
+        val n = createGraphDialog()
+        ga = Graph(n)
 
 
         img.viewTreeObserver.addOnGlobalLayoutListener(OnGlobalLayoutListener {
@@ -64,33 +63,6 @@ class MainActivity : AppCompatActivity() {
             img.setImageDrawable(d)
         }
 
-
-           /* try {
-                ga = gettofile()
-                img.setImageDrawable(DrawableGraph(ga))
-            }catch (e: IOException){
-                ga = Graph()
-                e.printStackTrace()
-                Log.e("MyActivity", "erreur de lecture de old_data")
-            }*/
-       ///////////////////
-
-       /* val oldData = this.getSharedPreferences("old", 0)
-        if (oldData != null) {
-            ga = Json.decodeFromString(oldData.getString("graph", "").toString())
-            val m: States? = Json.decodeFromString<States>(oldData.getString("mode", "").toString())
-            if (m != null) {
-                mode = m
-                faire(mode)
-                img.setImageDrawable(DrawableGraph(ga))
-            } else {
-                faire(mode)
-                img.setImageDrawable(DrawableGraph(ga))
-            }
-        } else {
-            ga = Graph()
-            img.setImageDrawable(DrawableGraph(ga))
-        }*/
     }
 
     /**
@@ -130,6 +102,26 @@ class MainActivity : AppCompatActivity() {
             //Lorsqu'on clique sur renitialiser le graphe
             R.id.reset -> {
                 mode = States.RESET
+                faire(mode)
+            }
+            //Lorsqu'on clique sur Sauvegarder le graphe
+            R.id.save -> {
+                mode = States.SAVE
+                faire(mode)
+            }
+            //Lorsqu'on clique sur importer un graphe
+            R.id.import_graph -> {
+                mode = States.IMPORT_NETWORK
+                faire(mode)
+            }
+            //Lorsqu'on clique sur importer de nouveau plan
+            R.id.import_plan -> {
+                mode = States.IMPORT_PLAN
+                faire(mode)
+            }
+            //Lorsqu'on clique sur envoyer la capture du graphe
+            R.id.send_network -> {
+                mode = States.SEND_NETWORK
                 faire(mode)
             }
         }
@@ -206,31 +198,8 @@ class MainActivity : AppCompatActivity() {
                                 yP = event.y
                                 if((xP>=30F && xP<=imgWidth-30F) && (yP>=30F && yP<=imgHeight-30F) ){
                                 //Création de la boite de dialogue et de ses actions
-                              //  if((xP>=30F && xP<=imgWidth-30F) && (yP>=30F && yP<=imgHeight-30F) ){
-                                val alertDialog = AlertDialog.Builder(this@MainActivity)
-                                val input = EditText(this@MainActivity)
-                                alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
-                                alertDialog.setMessage(resources.getString(R.string.dialog_text))
-                                alertDialog.setView(input)
-                                alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-                                    //methode du bouton Valider
-                                    val valsaisie = input.text.toString()
-                                    if(ga.getNode(xP,yP) == null){
-                                        ga.addNode(Node(xP, yP, valsaisie))
-                                        //img.invalidate()
-                                        img.setImageDrawable(DrawableGraph(ga))
-
-                                    }else{
-                                        Toast.makeText(this,"Vous ne pouvez dessiner au meme emplacement",Toast.LENGTH_LONG).show()
-                                    }
-                                    dialog.dismiss()
-                                }
-                                alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-                                    dialog.dismiss()
-                                }
-                                alertDialog.show()
-                               // }
-                            }else{
+                                    createNodeDialog()
+                                }else{
                                     Toast.makeText(this,"restez dans le cadre",Toast.LENGTH_LONG).show()
 
                                 }
@@ -276,8 +245,21 @@ class MainActivity : AppCompatActivity() {
             }
             States.RESET -> {
                 this.title = resources.getString(R.string.app_name)
-                ga = Graph()
+                ga.reset()
                 img.setImageDrawable(DrawableGraph(ga))
+            }
+            //Not implemented
+            States.SAVE -> {
+                this.title = resources.getString(R.string.app_name)
+            }
+            States.IMPORT_NETWORK -> {
+                this.title = resources.getString(R.string.app_name)
+            }
+            States.IMPORT_PLAN -> {
+                this.title = resources.getString(R.string.app_name)
+            }
+            States.SEND_NETWORK -> {
+                this.title = resources.getString(R.string.app_name)
             }
         }
     }
@@ -306,6 +288,52 @@ class MainActivity : AppCompatActivity() {
             }
             Json.decodeFromString("$value")
         }
+    }
+    /** Boite de dialogue pour la creation de noeud **/
+    fun createNodeDialog(){
+        val alertDialog = AlertDialog.Builder(this@MainActivity)
+        val input = EditText(this@MainActivity)
+        alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
+        alertDialog.setMessage(resources.getString(R.string.dialognode_text))
+        alertDialog.setView(input)
+        alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
+            //methode du bouton Valider
+            val valsaisie = input.text.toString()
+            if(ga.getNode(xP,yP) == null){
+                ga.addNode(Node(xP, yP, valsaisie))
+                //img.invalidate()
+                img.setImageDrawable(DrawableGraph(ga))
+
+            }else{
+                Toast.makeText(this,resources.getString(R.string.dialognode_msg),Toast.LENGTH_LONG).show()
+            }
+            dialog.dismiss()
+        }
+        alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
+    }
+    fun createGraphDialog():String{
+        var name:String = ""
+        val alertDialog = AlertDialog.Builder(this@MainActivity)
+        val input = EditText(this@MainActivity)
+        alertDialog.setTitle(resources.getString(R.string.graph_title))
+        alertDialog.setMessage(resources.getString(R.string.dialoggraph_text))
+        alertDialog.setView(input)
+        alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
+            if(input.text!=null){
+                name = input.text.toString()
+                dialog.dismiss()
+            }
+        }
+        alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
+        Toast.makeText(this,resources.getString(R.string.dialoggraph_msg),Toast.LENGTH_LONG).show()
+
+        return name
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

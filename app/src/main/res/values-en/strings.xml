@@ -11,11 +11,20 @@
     <string name="reading_text">Reading mode</string>
 
     <string name="noeud_etiquette">node label</string>
+    <string name="graph_title">network title</string>
 
-    <string name="dialog_text">Enter the label of the node</string>
+    <string name="dialognode_text">Enter the label of the node</string>
+    <string name="dialognode_msg">You cannot draw in the same location</string>
+
+    <string name="dialoggraph_text">Enter your network name</string>
+    <string name="dialoggraph_msg">Keep this name well it will allow to save your graph if necessary</string>
 
     <string name="valider_text">Save</string>
     <string name="annuler_text">Cancel</string>
 
     <string name="plan_text">plan</string>
+    <string name="sauvegarder_le_graphe">Sauvegarder le graphe</string>
+    <string name="import_graph">Afficher un graphe sauvegardé</string>
+    <string name="import_plan">Importer d\'autres plans</string>
+    <string name="envoyer_la_capture_du_graphe">Envoyer la capture du graphe</string>
 </resources>

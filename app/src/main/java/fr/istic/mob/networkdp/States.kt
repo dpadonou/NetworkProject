@@ -8,5 +8,9 @@ enum class States {
     ADDING_CONNEXION,
     READING_MODE,
     UPDATE_MODE,
-    RESET
+    RESET,
+    SAVE,
+    IMPORT_NETWORK,
+    IMPORT_PLAN,
+    SEND_NETWORK
 }
