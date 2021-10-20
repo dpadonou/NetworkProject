@@ -12,6 +12,8 @@
     <string name="reading_text">Mode Lecture</string>
 
     <string name="noeud_etiquette">Etiquette du noeud</string>
+    <string name="dialognoeud_msg1">Vous ne pouvez dessiner au meme emplacement</string>
+    <string name="dialognoeud_msg2">restez dans le cadre</string>
 
     <string name="dialog_text">Entrez le libelle de l\'etiquette du noeud</string>
 

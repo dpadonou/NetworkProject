@@ -11,6 +11,8 @@
     <string name="reading_text">Reading mode</string>
 
     <string name="noeud_etiquette">node label</string>
+    <string name="dialognoeud_msg1">You cannot draw in the same location</string>
+    <string name="dialognoeud_msg2">Stay in the frame</string>
 
     <string name="dialog_text">Enter the label of the node</string>
 

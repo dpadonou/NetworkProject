@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         //imgWidth = img.measuredWidth.toFloat()
         ga = Graph()
 
-
         img.viewTreeObserver.addOnGlobalLayoutListener(OnGlobalLayoutListener {
             imgWidth = img.measuredWidth.toFloat()
             imgHeight = img.measuredHeight.toFloat()
@@ -64,33 +63,6 @@ class MainActivity : AppCompatActivity() {
             img.setImageDrawable(d)
         }
 
-
-           /* try {
-                ga = gettofile()
-                img.setImageDrawable(DrawableGraph(ga))
-            }catch (e: IOException){
-                ga = Graph()
-                e.printStackTrace()
-                Log.e("MyActivity", "erreur de lecture de old_data")
-            }*/
-       ///////////////////
-
-       /* val oldData = this.getSharedPreferences("old", 0)
-        if (oldData != null) {
-            ga = Json.decodeFromString(oldData.getString("graph", "").toString())
-            val m: States? = Json.decodeFromString<States>(oldData.getString("mode", "").toString())
-            if (m != null) {
-                mode = m
-                faire(mode)
-                img.setImageDrawable(DrawableGraph(ga))
-            } else {
-                faire(mode)
-                img.setImageDrawable(DrawableGraph(ga))
-            }
-        } else {
-            ga = Graph()
-            img.setImageDrawable(DrawableGraph(ga))
-        }*/
     }
 
     /**
@@ -221,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                                         img.setImageDrawable(DrawableGraph(ga))
 
                                     }else{
-                                        Toast.makeText(this,"Vous ne pouvez dessiner au meme emplacement",Toast.LENGTH_LONG).show()
+                                        Toast.makeText(this,resources.getString(R.string.dialognoeud_msg1),Toast.LENGTH_LONG).show()
                                     }
                                     dialog.dismiss()
                                 }
@@ -231,7 +203,7 @@ class MainActivity : AppCompatActivity() {
                                 alertDialog.show()
                                // }
                             }else{
-                                    Toast.makeText(this,"restez dans le cadre",Toast.LENGTH_LONG).show()
+                                    Toast.makeText(this,resources.getString(R.string.dialognoeud_msg2),Toast.LENGTH_LONG).show()
 
                                 }
                             }
@@ -315,23 +287,5 @@ class MainActivity : AppCompatActivity() {
         outState.putSerializable("graph",json)
         outState.putSerializable("mode",json2)
         super.onSaveInstanceState(outState)
-    }
-    override fun onStop() {
-        super.onStop()
-      /*  try {
-           saveintofile()
-       }catch (e: IOException){
-           e.printStackTrace()
-           Log.e("MyActivity", "erreur d'ecriture de old_data")
-       }*/
-
-
-        //creation et ecriture des données partagées
-      /* val oldOperation = this.getSharedPreferences("old", 0)
-        val editor = oldOperation.edit()
-        val json = Json.encodeToString(ga)
-        editor.putString("graph", json)
-        editor.putString("mode", Json.encodeToString(mode))
-        editor.apply()*/
     }
 }
