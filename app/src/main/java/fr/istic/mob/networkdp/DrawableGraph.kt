@@ -11,18 +11,18 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
 
     init {
         rectPaint.style = Paint.Style.FILL
-        rectPaint.color = Color.RED
-        pathPaint.color = Color.YELLOW
-        pathPaint.strokeWidth = 20F
+        rectPaint.color = Color.rgb(30,144,255)
+        pathPaint.color = Color.rgb(0,250,154)
+        pathPaint.strokeWidth = 10F
         textPaint.color = Color.BLACK
-        textPaint.textSize = 40F
+        textPaint.textSize = 30F
     }
 
     private fun drawNodes(n: ArrayList<Node>) {
         if (n.isNotEmpty()) {
             for (i in n) {
                 c.drawCircle(i.getPosX(), i.getPosY(), 30F, rectPaint)
-                c.drawText(i.getTitre(), i.getPosX(), i.getPosY(), textPaint)
+                c.drawText(i.getTitre(), i.getPosX()-i.getTitre().length, i.getPosY()-i.getTitre().length, textPaint)
             }
         }
     }
@@ -45,10 +45,10 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     private fun drawTempConnexion(tempConnexion:Connexion?) {
         if (tempConnexion != null) {
             c.drawLine(
-                tempConnexion!!.getEmitter().getPosX(),
-                tempConnexion!!.getEmitter().getPosY(),
-                tempConnexion!!.getReceiver().getPosX(),
-                tempConnexion!!.getReceiver().getPosY(),
+                tempConnexion.getEmitter().getPosX(),
+                tempConnexion.getEmitter().getPosY(),
+                tempConnexion.getReceiver().getPosX(),
+                tempConnexion.getReceiver().getPosY(),
                 pathPaint
             )
         }

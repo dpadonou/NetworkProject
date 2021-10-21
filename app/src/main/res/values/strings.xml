@@ -21,4 +21,8 @@
     <string name="annuler_text">Annuler</string>
 
     <string name="plan_text">plan</string>
+    <string name="ask_name">Entrez le nom de l\'objet</string>
+    <string name="dialog_title">Nom de l\'objet</string>
+    <string name="btn_valider">Valider</string>
+    <string name="btn_annuler">Annuler</string>
 </resources>
