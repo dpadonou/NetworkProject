@@ -1,15 +1,28 @@
 <resources>
-    <string name="app_name">NetworkDJEDJEMEL/PADONOU</string>
+    <string name="app_name" translatable="false">NetworkDP</string>
 
-    <string name="reset_text">Renitialiser le réseau</string>
+    <string name="reset_text" >Renitialiser le reseau</string>
 
-    <string name="add_object_text">Ajout de noeuds</string>
+    <string name="add_object_text">Mode d\'ajout de noeuds</string>
 
-    <string name="add_connect_text">Ajout de connexion</string>
+    <string name="add_connect_text">Mode d\'ajout de connexion</string>
 
-    <string name="update_connect_text">Modifier une connexion</string>
+    <string name="update">Mode modification</string>
 
-    <string name="update_object_text">Modifier un noeud</string>
+    <string name="reading_text">Mode Lecture</string>
+
+    <string name="noeud_etiquette">Etiquette du noeud</string>
+    <string name="dialognoeud_msg1">Vous ne pouvez dessiner au meme emplacement</string>
+    <string name="dialognoeud_msg2">restez dans le cadre</string>
+
+    <string name="dialog_text">Entrez le libelle de l\'etiquette du noeud</string>
+
+    <string name="valider_text">Valider</string>
+    <string name="annuler_text">Annuler</string>
 
     <string name="plan_text">plan</string>
+    <string name="ask_name">Entrez le nom de l\'objet</string>
+    <string name="dialog_title">Nom de l\'objet</string>
+    <string name="btn_valider">Valider</string>
+    <string name="btn_annuler">Annuler</string>
 </resources>

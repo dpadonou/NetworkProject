@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NetworkDP</string>
+
+    <string name="reset_text">Reset Network</string>
+
+    <string name="add_object_text">Add nodes</string>
+
+    <string name="add_connect_text">Add links</string>
+
+    <string name="update">Update mode</string>
+
+    <string name="reading_text">Read mode</string>
+
+    <string name="plan_text">plan</string>
+
+    <string name="ask_name">Add a name</string>
+
+    <string name="dialog_title">Object name</string>
+
+    <string name="btn_valider">Submit</string>
+
+    <string name="btn_annuler">Cancel</string>
+</resources>
