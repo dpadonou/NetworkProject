@@ -15,6 +15,8 @@
 
     <string name="dialognode_text">Enter the label of the node</string>
     <string name="dialognode_msg">You cannot draw in the same location</string>
+    <string name="import_graph_msg">he has not network with this name in the memory</string>
+    <string name="email_subject">Graphe</string>
 
     <string name="dialoggraph_text">Enter your network name</string>
     <string name="dialoggraph_msg">Keep this name well it will allow to save your graph if necessary</string>
@@ -27,4 +29,23 @@
     <string name="import_graph">Afficher un graphe sauvegardé</string>
     <string name="import_plan">Importer d\'autres plans</string>
     <string name="envoyer_la_capture_du_graphe">Envoyer la capture du graphe</string>
+    <string name="delete_node_text">delete the node</string>
+    <string name="modifiy_node_label_text">Modify a label</string>
+    <string name="modify_node_color_text">Modify the color</string>
+    <string name="noir_text">Black</string>
+    <string name="vert_text">Green</string>
+    <string name="rouge_text">Red</string>
+    <string name="bleu_text">Blue</string>
+    <string name="orange_text">Orange</string>
+    <string name="magenta_text">Magenta</string>
+    <string name="cyan_text">Cyan</string>
+    <string name="delete_connex_text">Supprimer la connexion</string>
+    <string name="modify_connex_label_text">Modifiez l\'etiquette de la connexion</string>
+    <string name="modify_connex_color">Modifiez la couleur de la connexion</string>
+    <string name="modify_connex_width_text">Modifiez l\'epaisseur de la connexion</string>
+    <string name="small_connex_text">Small</string>
+    <string name="meduim_connex_text">Medium</string>
+    <string name="large_connex_text">Large</string>
+    <string name="graph_name_text">Nom du graphe :</string>
+    <string name="img_description_text">plan</string>
 </resources>

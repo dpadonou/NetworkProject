@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rgWidth"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioButton
+        android:id="@+id/btn_connex_small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/small_connex_text" />
+
+    <RadioButton
+        android:id="@+id/btn_connex_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/meduim_connex_text" />
+
+    <RadioButton
+        android:id="@+id/btn_connex_large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/large_connex_text" />
+</RadioGroup>

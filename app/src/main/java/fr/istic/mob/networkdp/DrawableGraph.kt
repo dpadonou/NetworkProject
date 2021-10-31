@@ -7,13 +7,13 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     private var c: Canvas = Canvas()
     private val textPaint = Paint(Paint.LINEAR_TEXT_FLAG)
     private val rectPaint = Paint(Paint.LINEAR_TEXT_FLAG)
-    private val pathPaint = Paint(Paint.FAKE_BOLD_TEXT_FLAG)
+    private val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pathtempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
         rectPaint.style = Paint.Style.FILL
-        rectPaint.color = Color.RED
-        pathPaint.color = Color.YELLOW
-        pathPaint.strokeWidth = 20F
+        pathPaint.style= Paint.Style.STROKE
+        pathtempPaint.style = Paint.Style.STROKE
         textPaint.color = Color.BLACK
         textPaint.textSize = 40F
     }
@@ -21,6 +21,7 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     private fun drawNodes(n: ArrayList<Node>) {
         if (n.isNotEmpty()) {
             for (i in n) {
+                rectPaint.color = i.getcouleur()
                 c.drawCircle(i.getPosX(), i.getPosY(), 30F, rectPaint)
                 c.drawText(i.getTitre(), i.getPosX(), i.getPosY(), textPaint)
             }
@@ -28,29 +29,29 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     }
 
     private fun drawConnexions(n: ArrayList<Connexion>) {
+        var p:Path = Path()
         if (n.isNotEmpty()) {
             for (i in n) {
-                c.drawLine(
-                    i.getEmitter().getPosX(),
-                    i.getEmitter().getPosY(),
+                pathPaint.strokeWidth = i.getEpaisseur()
+                pathPaint.color=i.getcouleur()
+                val pos:FloatArray = i.getMiddle()
+                p.moveTo(i.getEmitter().getPosX(),i.getEmitter().getPosY())
+                p.lineTo(i.getReceiver().getPosX(),i.getReceiver().getPosY())
+                c.drawPath(p,pathPaint)
+                c.drawText(i.getetiquette(),pos[0],pos[1],textPaint)
 
-                    i.getReceiver().getPosX(),
-                    i.getReceiver().getPosY(),
-                    pathPaint
-                )
             }
         }
     }
 
     private fun drawTempConnexion(tempConnexion:Connexion?) {
+        var p:Path = Path()
         if (tempConnexion != null) {
-            c.drawLine(
-                tempConnexion!!.getEmitter().getPosX(),
-                tempConnexion!!.getEmitter().getPosY(),
-                tempConnexion!!.getReceiver().getPosX(),
-                tempConnexion!!.getReceiver().getPosY(),
-                pathPaint
-            )
+            pathtempPaint.strokeWidth = tempConnexion.getEpaisseur()
+            pathtempPaint.color=tempConnexion.getcouleur()
+            p.moveTo(tempConnexion.getEmitter().getPosX(),tempConnexion.getEmitter().getPosY())
+            p.lineTo(tempConnexion.getReceiver().getPosX(),tempConnexion.getReceiver().getPosY())
+            c.drawPath(p,pathPaint)
         }
     }
 
