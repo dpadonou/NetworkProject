@@ -12,7 +12,7 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
 
     init {
         rectPaint.style = Paint.Style.FILL
-        pathPaint.style= Paint.Style.STROKE
+        pathPaint.style = Paint.Style.STROKE
         pathtempPaint.style = Paint.Style.STROKE
         textPaint.color = Color.BLACK
         textPaint.textSize = 40F
@@ -28,30 +28,29 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
         }
     }
 
-    private fun drawConnexions(n: ArrayList<Connexion>) {
-        var p:Path = Path()
-        if (n.isNotEmpty()) {
-            for (i in n) {
-                pathPaint.strokeWidth = i.getEpaisseur()
-                pathPaint.color=i.getcouleur()
-                val pos:FloatArray = i.getMiddle()
-                p.moveTo(i.getEmitter().getPosX(),i.getEmitter().getPosY())
-                p.lineTo(i.getReceiver().getPosX(),i.getReceiver().getPosY())
-                c.drawPath(p,pathPaint)
-                c.drawText(i.getetiquette(),pos[0],pos[1],textPaint)
-
+    private fun drawConnexions(connexions: ArrayList<Connexion>) {
+        var p: Path = Path()
+        if (connexions.isNotEmpty()) {
+            for (connexion in connexions) {
+                pathPaint.strokeWidth = connexion.getEpaisseur()
+                pathPaint.color = connexion.getcouleur()
+                val pos: FloatArray = connexion.getMiddle()
+                p.moveTo(connexion.getEmitter().getPosX(), connexion.getEmitter().getPosY())
+                p.lineTo(connexion.getReceiver().getPosX(), connexion.getReceiver().getPosY())
+                c.drawPath(p, pathPaint)
+                c.drawText(connexion.getetiquette(), pos[0], pos[1], textPaint)
             }
         }
     }
 
-    private fun drawTempConnexion(tempConnexion:Connexion?) {
-        var p:Path = Path()
+    private fun drawTempConnexion(tempConnexion: Connexion?) {
+        var p = Path()
         if (tempConnexion != null) {
             pathtempPaint.strokeWidth = tempConnexion.getEpaisseur()
-            pathtempPaint.color=tempConnexion.getcouleur()
-            p.moveTo(tempConnexion.getEmitter().getPosX(),tempConnexion.getEmitter().getPosY())
-            p.lineTo(tempConnexion.getReceiver().getPosX(),tempConnexion.getReceiver().getPosY())
-            c.drawPath(p,pathPaint)
+            pathtempPaint.color = tempConnexion.getcouleur()
+            p.moveTo(tempConnexion.getEmitter().getPosX(), tempConnexion.getEmitter().getPosY())
+            p.lineTo(tempConnexion.getReceiver().getPosX(), tempConnexion.getReceiver().getPosY())
+            c.drawPath(p, pathPaint)
         }
     }
 

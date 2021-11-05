@@ -3,26 +3,23 @@ package fr.istic.mob.networkdp
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.*
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import java.io.*
-
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.os.Build
-
-import android.os.Environment
-import android.view.*
-import android.widget.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -151,7 +148,6 @@ class MainActivity : AppCompatActivity() {
                 this.title = sb.toString()
                 var ndepart: Node? = null
                 var ntp: Node?
-                var tmpconnexion: Connexion?
                 lateinit var nfin: Node
                 img.setOnTouchListener { _, event ->
                     when (event.action) {
@@ -261,10 +257,10 @@ class MainActivity : AppCompatActivity() {
                                 yP = event.y
                                 Log.i("","yes")
                                 if(ga.getNode(xP,yP) != null){
-                                    val d:nodeUpdateDialog = nodeUpdateDialog(this,this.ga,ga.getNode(xP,yP)!!)
+                                    val d = nodeUpdateDialog(this,this.ga,ga.getNode(xP,yP)!!)
                                     d.show()
                                 }else if(ga.getConnexion(xP,yP) != null){
-                                    val cd:ConnexionUpdateDialog = ConnexionUpdateDialog(this,this.ga,ga.getConnexion(xP,yP)!!)
+                                    val cd = ConnexionUpdateDialog(this,this.ga,ga.getConnexion(xP,yP)!!)
                                     cd.show()
                                 }
                             }
@@ -316,7 +312,7 @@ class MainActivity : AppCompatActivity() {
             }
             States.IMPORT_NETWORK -> {
                 this.title = resources.getString(R.string.app_name)
-                var name1:String = ""
+                var name1: String = ""
                 val alertDialog = AlertDialog.Builder(this@MainActivity)
                 val input = EditText(this@MainActivity)
                 alertDialog.setTitle(resources.getString(R.string.graph_title))
@@ -575,7 +571,7 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onContextItemSelected(item)
     }*/
-    fun updateNodepopUp(v:View,n:Node){
+    /*fun updateNodepopUp(v:View,n:Node){
         var popup:PopupMenu = PopupMenu(this,v,Gravity.CENTER)
         popup.inflate(R.menu.updatenode)
         popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
@@ -620,6 +616,6 @@ class MainActivity : AppCompatActivity() {
             true
         })
         popup.show()
-    }
+    }*/
 
 }
