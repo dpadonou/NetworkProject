@@ -2,11 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="@string/reset_text" android:id="@+id/reset"/>
 
+    <item
+        android:id="@+id/save"
+        android:title="@string/sauvegarder_le_graphe" />
+    <item
+        android:id="@+id/import_graph"
+        android:title="@string/import_graph" />
+    <item
+        android:id="@+id/import_plan"
+        android:title="@string/import_plan" />
+    <item
+        android:id="@+id/send_network"
+        android:title="@string/envoyer_la_capture_du_graphe" />
     <item android:title="@string/add_connect_text" android:id="@+id/add_connect"/>
 
     <item android:title="@string/add_object_text" android:id="@+id/add_object"/>
 
-    <item android:title="@string/update_object_text" android:id="@+id/update_object"/>
+    <item android:title="@string/reading_text" android:id="@+id/reading_mode"/>
 
-    <item android:title="@string/update_connect_text" android:id="@+id/update_connect"/>
+    <item android:title="@string/update" android:id="@+id/update"/>
 </menu>

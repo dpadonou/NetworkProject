@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rgcolor"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RadioButton
+        android:id="@+id/redradio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/rouge_text" />
+
+    <RadioButton
+        android:id="@+id/greenradio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/vert_text" />
+
+    <RadioButton
+        android:id="@+id/blueradio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/bleu_text" />
+    <RadioButton
+        android:id="@+id/orangeradio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/orange_text" />
+
+    <RadioButton
+        android:id="@+id/cyanradio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/cyan_text" />
+
+    <RadioButton
+        android:id="@+id/magentaradio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/magenta_text" />
+    <RadioButton
+        android:id="@+id/noirradio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/noir_text" />
+</RadioGroup>

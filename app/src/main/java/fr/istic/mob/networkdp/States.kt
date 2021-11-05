@@ -1,9 +1,16 @@
 package fr.istic.mob.networkdp
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class States {
     ADDING_NODE,
     ADDING_CONNEXION,
-    UPDATE_NODE,
-    UPDATE_CONNEXION,
-    RESET
+    READING_MODE,
+    UPDATE_MODE,
+    RESET,
+    SAVE,
+    IMPORT_NETWORK,
+    IMPORT_PLAN,
+    SEND_NETWORK
 }

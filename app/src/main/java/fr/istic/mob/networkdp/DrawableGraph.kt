@@ -3,31 +3,62 @@ package fr.istic.mob.networkdp
 import android.graphics.*
 import android.graphics.drawable.Drawable
 
-class DrawableGraph:Drawable {
-    private lateinit var ga:Graph
+class DrawableGraph(private var ga: Graph) : Drawable() {
+    private var c: Canvas = Canvas()
+    private val textPaint = Paint(Paint.LINEAR_TEXT_FLAG)
+    private val rectPaint = Paint(Paint.LINEAR_TEXT_FLAG)
+    private val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pathtempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    constructor(ga: Graph) : super() {
-        this.ga = ga
+    init {
+        rectPaint.style = Paint.Style.FILL
+        pathPaint.style = Paint.Style.STROKE
+        pathtempPaint.style = Paint.Style.STROKE
+        textPaint.color = Color.BLACK
+        textPaint.textSize = 40F
     }
 
-    //  constructor() : super()
+    private fun drawNodes(n: ArrayList<Node>) {
+        if (n.isNotEmpty()) {
+            for (i in n) {
+                rectPaint.color = i.getcouleur()
+                c.drawCircle(i.getPosX(), i.getPosY(), 30F, rectPaint)
+                c.drawText(i.getTitre(), i.getPosX(), i.getPosY(), textPaint)
+            }
+        }
+    }
 
-    fun setGraph(g:Graph){
-        this.ga = g
+    private fun drawConnexions(connexions: ArrayList<Connexion>) {
+        var p: Path = Path()
+        if (connexions.isNotEmpty()) {
+            for (connexion in connexions) {
+                pathPaint.strokeWidth = connexion.getEpaisseur()
+                pathPaint.color = connexion.getcouleur()
+                val pos: FloatArray = connexion.getMiddle()
+                p.moveTo(connexion.getEmitter().getPosX(), connexion.getEmitter().getPosY())
+                p.lineTo(connexion.getReceiver().getPosX(), connexion.getReceiver().getPosY())
+                c.drawPath(p, pathPaint)
+                c.drawText(connexion.getetiquette(), pos[0], pos[1], textPaint)
+            }
+        }
+    }
+
+    private fun drawTempConnexion(tempConnexion: Connexion?) {
+        var p = Path()
+        if (tempConnexion != null) {
+            pathtempPaint.strokeWidth = tempConnexion.getEpaisseur()
+            pathtempPaint.color = tempConnexion.getcouleur()
+            p.moveTo(tempConnexion.getEmitter().getPosX(), tempConnexion.getEmitter().getPosY())
+            p.lineTo(tempConnexion.getReceiver().getPosX(), tempConnexion.getReceiver().getPosY())
+            c.drawPath(p, pathPaint)
+        }
     }
 
     override fun draw(p0: Canvas) {
-        val textPaint = Paint(Paint.LINEAR_TEXT_FLAG)
-        val rectp = Paint(Paint.LINEAR_TEXT_FLAG)
-        rectp.style = Paint.Style.FILL
-        rectp.color = Color.RED
-        textPaint.color = Color.BLACK
-        textPaint.textSize = 100F
-        // canvas.drawText("hey", 288F, 350F, textPaint)
-        for ((key, value) in ga.g) {
-            p0.drawCircle(key.getPosx(), key.getPosy(), 40F, rectp)
-            p0.drawText(key.getTitre(), key.getPosx(), key.getPosy(), textPaint)
-        }
+        this.c = p0
+        drawNodes(ga.getNodeList())
+        drawTempConnexion(ga.tmpConnexion)
+        drawConnexions(ga.getConnexionList())
     }
 
     override fun setAlpha(p0: Int) {

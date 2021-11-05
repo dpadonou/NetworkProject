@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_delete_connex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_connex_text" />
+
+    <Button
+        android:id="@+id/btn_connex_etiq_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/modify_connex_label_text" />
+
+    <Button
+        android:id="@+id/btn_modify_connexColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/modify_connex_color" />
+
+    <Button
+        android:id="@+id/btn_modifiy_connexWidth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/modify_connex_width_text" />
+
+</LinearLayout>

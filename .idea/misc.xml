@@ -3,7 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Arnauld Cyriaque/AndroidStudioProjects/NetworkDP/app/src/main/res/layout/activity_main.xml" value="0.12771739130434784" />
+        <entry key="..\:/Users/Arnauld Cyriaque/AndroidStudioProjects/NetworkDP/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/Arnauld Cyriaque/AndroidStudioProjects/NetworkDP/app/src/main/res/layout/layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Arnauld Cyriaque/AndroidStudioProjects/NetworkDP/app/src/main/res/layout/layout_color_node.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Arnauld Cyriaque/AndroidStudioProjects/NetworkDP/app/src/main/res/layout/layout_connexion_width.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Arnauld Cyriaque/AndroidStudioProjects/NetworkDP/app/src/main/res/layout/update_node.xml" value="0.16757246376811594" />
+        <entry key="..\:/Users/Arnauld Cyriaque/AndroidStudioProjects/NetworkDP/app/src/main/res/menu/app_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Arnauld Cyriaque/AndroidStudioProjects/NetworkDP/app/src/main/res/menu/updatenode.xml" value="0.1" />
       </map>
     </option>
   </component>

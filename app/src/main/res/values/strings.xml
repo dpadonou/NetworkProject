@@ -1,15 +1,53 @@
 <resources>
-    <string name="app_name">NetworkDJEDJEMEL/PADONOU</string>
+    <string name="app_name" translatable="false">NetworkDP</string>
 
-    <string name="reset_text">Renitialiser le réseau</string>
+    <string name="reset_text" >Renitialiser le reseau</string>
 
-    <string name="add_object_text">Ajout de noeuds</string>
+    <string name="add_object_text">Mode d\'ajout de noeuds</string>
 
-    <string name="add_connect_text">Ajout de connexion</string>
+    <string name="add_connect_text">Mode d\'ajout de connexion</string>
 
-    <string name="update_connect_text">Modifier une connexion</string>
+    <string name="update">Mode modification</string>
 
-    <string name="update_object_text">Modifier un noeud</string>
+    <string name="reading_text">Mode Lecture</string>
+
+    <string name="noeud_etiquette">Etiquette du noeud</string>
+    <string name="graph_title">Titre du graphe</string>
+
+    <string name="dialognode_text">Entrez le libelle de l\'etiquette du noeud</string>
+    <string name="dialognode_msg">Vous ne pouvez dessiner au meme emplacement</string>
+    <string name="import_graph_msg">Il n\'existe pas de graphe portant ce nom dans la memoire</string>
+    <string name="email_subject">Graphe</string>
+
+
+    <string name="dialoggraph_text">Entrez le nom de votre graph</string>
+    <string name="dialoggraph_msg">Gardez bien ce nom il permettra d\'enregistrer votre graphe si necessaire</string>
+
+    <string name="valider_text">Valider</string>
+    <string name="annuler_text">Annuler</string>
 
     <string name="plan_text">plan</string>
+    <string name="sauvegarder_le_graphe">Sauvegarder le graphe</string>
+    <string name="import_graph">Afficher un graphe sauvegardé</string>
+    <string name="import_plan">Importer d\'autres plans</string>
+    <string name="envoyer_la_capture_du_graphe">Envoyer la capture du graphe</string>
+    <string name="delete_node_text">Supprimer l\'objet</string>
+    <string name="modifiy_node_label_text">Changer l\'etiquette</string>
+    <string name="modify_node_color_text">Modifiez la couleur</string>
+    <string name="noir_text">Noir</string>
+    <string name="rouge_text">rouge</string>
+    <string name="vert_text">Vert</string>
+    <string name="bleu_text">Bleu</string>
+    <string name="orange_text">Orange</string>
+    <string name="magenta_text">Magenta</string>
+    <string name="cyan_text">Cyan</string>
+    <string name="delete_connex_text">Supprimer la connexion</string>
+    <string name="modify_connex_label_text">Modifiez l\'etiquette de la connexion</string>
+    <string name="modify_connex_color">Modifiez la couleur de la connexion</string>
+    <string name="modify_connex_width_text">Modifiez l\'epaisseur de la connexion</string>
+    <string name="small_connex_text">Petite largeur</string>
+    <string name="meduim_connex_text">Largeur Moyenne</string>
+    <string name="large_connex_text">Très large</string>
+    <string name="graph_name_text">Nom du graphe :</string>
+    <string name="img_description_text">plan</string>
 </resources>
