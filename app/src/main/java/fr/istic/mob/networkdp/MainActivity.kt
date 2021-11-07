@@ -164,11 +164,11 @@ class MainActivity : AppCompatActivity() {
                         MotionEvent.ACTION_UP -> {
                             upx = event.x
                             upy = event.y
-                            ga.tmpConnexion = null
-                            //img.invalidate()
-                            img.setImageDrawable(DrawableGraph(ga))
+                            ga.settmpConnexion(null)
+                            img.invalidate()
+                            //img.setImageDrawable(DrawableGraph(ga))
                             val nfintp: Node? = ga.getNode(upx, upy)
-                            if (nfintp != null) {
+                            if (nfintp != null && ndepart !=null) {
                                 nfin = nfintp
                                 val c = Connexion(ndepart!!, nfin)
                                 val cbis = Connexion(nfin, ndepart!!)
@@ -199,16 +199,15 @@ class MainActivity : AppCompatActivity() {
                                     Toast.makeText(this,"Impossible de créer plusieurs connexions entre deux noeuds",Toast.LENGTH_LONG).show()
                                 }
                             }
-                            Log.i("", "Up: $upx - $upy")
                         }
                         MotionEvent.ACTION_MOVE -> {
                             mx = event.x
                             my = event.y
                             ntp = Node(mx, my, "")
                             if (ndepart != null) {
-                                ga.tmpConnexion = Connexion(ndepart!!, ntp!!)
-                                //img.invalidate()
-                                img.setImageDrawable(DrawableGraph(ga))
+                                ga.settmpConnexion(Connexion(ndepart!!, ntp!!))
+                                img.invalidate()
+                               // img.setImageDrawable(DrawableGraph(ga))
                             }
                         }
                     }
@@ -278,23 +277,39 @@ class MainActivity : AppCompatActivity() {
                 sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.reading_text))
                 this.title = sb.toString()
                 var selectNode: Node? = null
+                var selectedConnex:Connexion? = null
                 img.setOnTouchListener { _, event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
                             downX = event.x
                             downY = event.y
-                            selectNode = ga.getNode(downX, downY)
+                            if(ga.getNode(downX, downY)!=null){
+                                selectNode = ga.getNode(downX, downY)
+                            }else if(ga.getConnexion(downX,downY)!=null){
+                                selectedConnex = ga.getConnexion(downX,downY)
+                                //selectedConnex!!.mx = downX
+                                //selectedConnex!!.my = downY
+                            }
                         }
                         MotionEvent.ACTION_MOVE -> {
                             mx = event.x
                             my = event.y
-                            if((mx>=30F && mx<=imgWidth-30F) && (my>=30F && my<=imgHeight-30F) ){
-                                if (selectNode != null) {
+                            if (selectNode != null) {
+                                if((mx>=30F && mx<=imgWidth-30F) && (my>=30F && my<=imgHeight-30F) ){
                                     selectNode!!.setPosY(my)
                                     selectNode!!.setPosX(mx)
                                     img.invalidate()
-                                    // img.setImageDrawable(DrawableGraph(ga))
                                 }
+                            }else if(selectedConnex!=null){
+                                //Log.i("","Let's go")
+                                selectedConnex!!.isCurved=true
+                                selectedConnex!!.mx = mx
+                                selectedConnex!!.my = my
+                                this.ga.setselectedConnexion(selectedConnex)
+                                img.setImageDrawable(DrawableGraph(this.ga))
+                                //selectedConnex!!.mx = mx
+                                //selectedConnex!!.my = my
+                               // img.invalidate()
                             }
 
                         }
@@ -575,7 +590,7 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onContextItemSelected(item)
     }*/
-    fun updateNodepopUp(v:View,n:Node){
+   /* fun updateNodepopUp(v:View,n:Node){
         var popup:PopupMenu = PopupMenu(this,v,Gravity.CENTER)
         popup.inflate(R.menu.updatenode)
         popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
@@ -620,6 +635,6 @@ class MainActivity : AppCompatActivity() {
             true
         })
         popup.show()
-    }
+    }*/
 
 }

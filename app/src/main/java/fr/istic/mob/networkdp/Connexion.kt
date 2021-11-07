@@ -1,6 +1,7 @@
 package fr.istic.mob.networkdp
 
 import android.graphics.Color
+import android.graphics.Paint
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,6 +10,9 @@ class Connexion(private var debut: Node) {
     private var etiquette:String = ""
     private var couleur:Int = Color.YELLOW
     private var epaisseur:Float = 20F
+    var isCurved:Boolean = false
+    var mx:Float = 0F
+    var my:Float = 0F
 
     constructor(debut: Node, fin: Node) : this(debut) {
         this.debut = debut
@@ -28,6 +32,7 @@ class Connexion(private var debut: Node) {
     fun getReceiver(): Node {
         return this.fin
     }
+
     /**
      * getters and setters for fin
      */
@@ -37,6 +42,7 @@ class Connexion(private var debut: Node) {
     fun setetiquette(s:String) {
         this.etiquette = s
     }
+
     /** getters et setters pour la couleur **/
     fun getcouleur(): Int {
         return this.couleur
@@ -44,6 +50,8 @@ class Connexion(private var debut: Node) {
     fun setcouleur(i:Int) {
         this.couleur=i
     }
+
+
     /** getters et setters pour l'epaisseur **/
     fun getEpaisseur(): Float {
         return this.epaisseur

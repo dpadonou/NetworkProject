@@ -5,10 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class Graph {
-    private lateinit var titre:String
+    private  var titre:String = ""
     private val nodes: ArrayList<Node> = ArrayList()
     private val connexions: ArrayList<Connexion> = ArrayList()
-    var tmpConnexion:Connexion? = null
+    private var tmpConnexion:Connexion? = null
+    private var selectedConnexion:Connexion? = null
 
    /* constructor(titre: String) {
         this.titre = titre
@@ -16,6 +17,22 @@ class Graph {
     /** Methode pour recuperer le titre **/
     fun getTitre() : String{
         return this.titre
+    }
+    /** Methode pour attribuer une connexion temporaire **/
+    fun settmpConnexion(c:Connexion?){
+        this.tmpConnexion = c
+    }
+    /** Methode pour recuperer la connexion temporaire **/
+    fun gettmpConnexion() : Connexion?{
+        return this.tmpConnexion
+    }
+    /** Methode pour attribuer une connexion selectionnée **/
+    fun setselectedConnexion(c:Connexion?){
+        this.selectedConnexion = c
+    }
+    /** Methode pour recuperer la connexion selectionnée **/
+    fun getselectedConnexion() : Connexion?{
+        return this.selectedConnexion
     }
     /** Methode pour attribuer un nom au graphe **/
     fun setTitre(name:String){

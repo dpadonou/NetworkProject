@@ -121,7 +121,6 @@ class ConnexionUpdateDialog: Dialog {
                     R.id.btn_connex_small -> check=10F
                     R.id.btn_connex_medium -> check=20F
                     R.id.btn_connex_large -> check=40F
-
                 }
             }
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
