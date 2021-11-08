@@ -31,8 +31,8 @@ class nodeUpdateDialog : Dialog {
                 if(this.ga.deleteNode(this.n)){
                     Toast.makeText(this.context,"Suppression réussie", Toast.LENGTH_LONG).show()
                     dialog.dismiss()
-                    this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    this.m.getImg().invalidate()
+                    this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
                     dialog.dismiss()
@@ -55,8 +55,8 @@ class nodeUpdateDialog : Dialog {
                 val valsaisie = input.text.toString()
                 if( input.text!=null){
                     this.n.setTitre(input.text.toString())
-                    this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    this.m.getImg().invalidate()
+                    this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
                     Toast.makeText(this.m,this.m.resources.getString(R.string.dialognode_msg),Toast.LENGTH_LONG).show()
@@ -92,8 +92,8 @@ class nodeUpdateDialog : Dialog {
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 if(check != 0){
                     this.n.setcouleur(check)
-                    this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    this.m.getImg().invalidate()
+                    this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }
                 dialog.dismiss()

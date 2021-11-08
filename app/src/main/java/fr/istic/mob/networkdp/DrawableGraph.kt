@@ -8,12 +8,12 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     private val textPaint = Paint(Paint.LINEAR_TEXT_FLAG)
     private val rectPaint = Paint(Paint.LINEAR_TEXT_FLAG)
     private val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val pathtempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pathTempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
         rectPaint.style = Paint.Style.FILL
         pathPaint.style = Paint.Style.STROKE
-        pathtempPaint.style = Paint.Style.STROKE
+        pathTempPaint.style = Paint.Style.STROKE
         textPaint.color = Color.BLACK
         textPaint.textSize = 40F
     }
@@ -28,26 +28,26 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
         }
     }
 
-    private fun drawConnexions(connexions: ArrayList<Connexion>) {
-        var p: Path = Path()
-        if (connexions.isNotEmpty()) {
-            for (connexion in connexions) {
+    private fun ArrayList<Connexion>.drawConnexions() {
+        val p = Path()
+        if (isNotEmpty()) {
+            for (connexion in this) {
                 pathPaint.strokeWidth = connexion.getEpaisseur()
-                pathPaint.color = connexion.getcouleur()
+                pathPaint.color = connexion.getColor()
                 val pos: FloatArray = connexion.getMiddle()
                 p.moveTo(connexion.getEmitter().getPosX(), connexion.getEmitter().getPosY())
                 p.lineTo(connexion.getReceiver().getPosX(), connexion.getReceiver().getPosY())
                 c.drawPath(p, pathPaint)
-                c.drawText(connexion.getetiquette(), pos[0], pos[1], textPaint)
+                c.drawText(connexion.getEtiquette(), pos[0], pos[1], textPaint)
             }
         }
     }
 
     private fun drawTempConnexion(tempConnexion: Connexion?) {
-        var p = Path()
+        val p = Path()
         if (tempConnexion != null) {
-            pathtempPaint.strokeWidth = tempConnexion.getEpaisseur()
-            pathtempPaint.color = tempConnexion.getcouleur()
+            pathTempPaint.strokeWidth = tempConnexion.getEpaisseur()
+            pathTempPaint.color = tempConnexion.getColor()
             p.moveTo(tempConnexion.getEmitter().getPosX(), tempConnexion.getEmitter().getPosY())
             p.lineTo(tempConnexion.getReceiver().getPosX(), tempConnexion.getReceiver().getPosY())
             c.drawPath(p, pathPaint)
@@ -58,7 +58,7 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
         this.c = p0
         drawNodes(ga.getNodeList())
         drawTempConnexion(ga.tmpConnexion)
-        drawConnexions(ga.getConnexionList())
+        ga.getConnexionList().drawConnexions()
     }
 
     override fun setAlpha(p0: Int) {
