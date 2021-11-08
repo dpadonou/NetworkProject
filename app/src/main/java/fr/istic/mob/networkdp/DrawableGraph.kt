@@ -7,13 +7,9 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     private var c: Canvas = Canvas()
     private val textPaint = Paint(Paint.LINEAR_TEXT_FLAG)
     private val rectPaint = Paint(Paint.LINEAR_TEXT_FLAG)
-    private val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val pathTempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
         rectPaint.style = Paint.Style.FILL
-        pathPaint.style = Paint.Style.STROKE
-        pathTempPaint.style = Paint.Style.STROKE
         textPaint.color = Color.BLACK
         textPaint.textSize = 40F
     }
@@ -28,37 +24,62 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
         }
     }
 
-    private fun ArrayList<Connexion>.drawConnexions() {
-        val p = Path()
-        if (isNotEmpty()) {
-            for (connexion in this) {
-                pathPaint.strokeWidth = connexion.getEpaisseur()
-                pathPaint.color = connexion.getColor()
-                val pos: FloatArray = connexion.getMiddle()
-                p.moveTo(connexion.getEmitter().getPosX(), connexion.getEmitter().getPosY())
-                p.lineTo(connexion.getReceiver().getPosX(), connexion.getReceiver().getPosY())
-                c.drawPath(p, pathPaint)
-                c.drawText(connexion.getEtiquette(), pos[0], pos[1], textPaint)
+    private fun drawConnexions(n: ArrayList<Connexion>) {
+        var p:Path = Path()
+        val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        pathPaint.style= Paint.Style.STROKE
+        if (n.isNotEmpty()) {
+            for (i in n) {
+                pathPaint.strokeWidth = i.getEpaisseur()
+                pathPaint.color=i.getcouleur()
+                val pos:FloatArray = i.getMiddle()
+                p.moveTo(i.getEmitter().getPosX(),i.getEmitter().getPosY())
+                if(i.isCurved){
+                    p.quadTo((pos[0] + i.mx) / 2, (pos[1] + i.my) / 2,i.getReceiver().getPosX(),i.getReceiver().getPosY())
+                    c.drawText(i.getetiquette(),(pos[0] + i.mx)/ 2,(pos[1] + i.my)/ 2,textPaint)
+                }else{
+                    p.lineTo(i.getReceiver().getPosX(),i.getReceiver().getPosY())
+                    c.drawText(i.getetiquette(),pos[0],pos[1],textPaint)
+                }
+                c.drawPath(p,pathPaint)
             }
         }
     }
 
-    private fun drawTempConnexion(tempConnexion: Connexion?) {
-        val p = Path()
+    private fun drawTempConnexion(tempConnexion:Connexion?) {
+        var p:Path = Path()
+        val pathtempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        pathtempPaint.style = Paint.Style.STROKE
         if (tempConnexion != null) {
-            pathTempPaint.strokeWidth = tempConnexion.getEpaisseur()
-            pathTempPaint.color = tempConnexion.getColor()
-            p.moveTo(tempConnexion.getEmitter().getPosX(), tempConnexion.getEmitter().getPosY())
-            p.lineTo(tempConnexion.getReceiver().getPosX(), tempConnexion.getReceiver().getPosY())
-            c.drawPath(p, pathPaint)
+            pathtempPaint.strokeWidth = tempConnexion.getEpaisseur()
+            pathtempPaint.color=tempConnexion.getcouleur()
+            p.moveTo(tempConnexion.getEmitter().getPosX(),tempConnexion.getEmitter().getPosY())
+            //p.quadTo(tempConnexion.getEmitter().getPosX(),tempConnexion.getEmitter().getPosY(),tempConnexion.getReceiver().getPosX(),tempConnexion.getReceiver().getPosY())
+            p.lineTo(tempConnexion.getReceiver().getPosX(),tempConnexion.getReceiver().getPosY())
+            c.drawPath(p,pathtempPaint)
+        }
+    }
+    private fun drawSelectedConnexion(con:Connexion?) {
+        var p:Path = Path()
+        val pathtempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        pathtempPaint.style = Paint.Style.STROKE
+        if (con != null) {
+            val pos:FloatArray = con.getMiddle()
+            pathtempPaint.strokeWidth = con.getEpaisseur()
+            pathtempPaint.color=con.getcouleur()
+            p.moveTo(con.getEmitter().getPosX(),con.getEmitter().getPosY())
+            p.quadTo((pos[0] + con.mx) / 2, (pos[1] + con.my) / 2,con.getReceiver().getPosX(),con.getReceiver().getPosX());
+           // p.lineTo(tempConnexion.getReceiver().getPosX(),tempConnexion.getReceiver().getPosY())
+            c.drawPath(p,pathtempPaint)
         }
     }
 
     override fun draw(p0: Canvas) {
         this.c = p0
         drawNodes(ga.getNodeList())
-        drawTempConnexion(ga.tmpConnexion)
-        ga.getConnexionList().drawConnexions()
+        drawConnexions(ga.getConnexionList())
+        drawTempConnexion(ga.gettmpConnexion())
+        //drawSelectedConnexion(ga.getselectedConnexion())
     }
 
     override fun setAlpha(p0: Int) {

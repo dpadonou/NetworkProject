@@ -1,24 +1,41 @@
 package fr.istic.mob.networkdp
 
+import android.util.Log
 import kotlinx.serialization.Serializable
 
 @Serializable
 class Graph {
-    private lateinit var titre: String
+    private  var titre:String = ""
     private val nodes: ArrayList<Node> = ArrayList()
     private val connexions: ArrayList<Connexion> = ArrayList()
-    var tmpConnexion: Connexion? = null
+    private var tmpConnexion:Connexion? = null
+    private var selectedConnexion:Connexion? = null
 
-    /* constructor(titre: String) {
-         this.titre = titre
-     }*/
+   /* constructor(titre: String) {
+        this.titre = titre
+    }*/
     /** Methode pour recuperer le titre **/
-    fun getTitre(): String {
+    fun getTitre() : String{
         return this.titre
     }
-
+    /** Methode pour attribuer une connexion temporaire **/
+    fun settmpConnexion(c:Connexion?){
+        this.tmpConnexion = c
+    }
+    /** Methode pour recuperer la connexion temporaire **/
+    fun gettmpConnexion() : Connexion?{
+        return this.tmpConnexion
+    }
+    /** Methode pour attribuer une connexion selectionnée **/
+    fun setselectedConnexion(c:Connexion?){
+        this.selectedConnexion = c
+    }
+    /** Methode pour recuperer la connexion selectionnée **/
+    fun getselectedConnexion() : Connexion?{
+        return this.selectedConnexion
+    }
     /** Methode pour attribuer un nom au graphe **/
-    fun setTitre(name: String) {
+    fun setTitre(name:String){
         this.titre = name
     }
 
@@ -38,23 +55,22 @@ class Graph {
         }
         return no
     }
-
     fun getConnexion(x: Float, y: Float): Connexion? {
         var co: Connexion? = null
-        for (c: Connexion in connexions) {
-            val f = c.getMiddle()
-            if ((x >= c.getMiddle()[0] - 20F && x <= c.getMiddle()[0] + 20F) && (y >= c.getMiddle()[1] - 20F && y <= c.getMiddle()[1] + 20F)) {
+        for (c:Connexion in connexions) {
+           // Log.i("","x:$x |${c.getMiddle()[0]}||y:$y| ${c.getMiddle()[1]}")
+               val f = c.getMiddle()
+            if ((x>= c.getMiddle()[0]- 20F && x<= c.getMiddle()[0]+20F) && (y>= c.getMiddle()[1]- 20F && y<= c.getMiddle()[1]+20F) ) {
                 co = c
             }
         }
         return co
     }
-
-    fun getConnexion(c: Connexion): Connexion? {
-        var con: Connexion? = null
-        for (co: Connexion in connexions) {
+    fun getConnexion(c:Connexion): Connexion? {
+        var con:Connexion?  = null
+        for (co:Connexion in connexions) {
             if (co == c) {
-                con = co
+                con=co
             }
         }
         return con
@@ -81,15 +97,15 @@ class Graph {
     }
 
     /** methode pour renitialiser le graphe **/
-    fun reset() {
+    fun reset(){
         this.connexions.clear()
         this.nodes.clear()
         this.tmpConnexion = null
     }
 
     /** methode pour supprimer un noeud **/
-    fun deleteNode(n: Node): Boolean {
-        for (co: Connexion in connexions) {
+    fun deleteNode(n:Node):Boolean{
+        for (co:Connexion in connexions) {
             if (co.getEmitter() == n || co.getReceiver() == n) {
                 this.connexions.remove(co)
             }
@@ -97,9 +113,8 @@ class Graph {
         this.nodes.remove(n)
         return true
     }
-
     /** methode pour supprimer un noeud **/
-    fun deleteConnexion(c: Connexion): Boolean {
+    fun deleteConnexion(c:Connexion):Boolean{
         this.connexions.remove(c)
         return true
     }
