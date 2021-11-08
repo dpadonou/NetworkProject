@@ -32,7 +32,7 @@ class nodeUpdateDialog : Dialog {
                     Toast.makeText(this.context,context.getString(R.string.drop_success_text), Toast.LENGTH_LONG).show()
                     dialog.dismiss()
                     this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                   // this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
                     dialog.dismiss()
@@ -56,7 +56,7 @@ class nodeUpdateDialog : Dialog {
                 if( input.text!=null){
                     this.n.setTitre(input.text.toString())
                     this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
                     Toast.makeText(this.m,context.getString(R.string.node_etiquette_modify),Toast.LENGTH_LONG).show()
@@ -93,7 +93,7 @@ class nodeUpdateDialog : Dialog {
                 if(check != 0){
                     this.n.setcouleur(check)
                     this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }
                 dialog.dismiss()

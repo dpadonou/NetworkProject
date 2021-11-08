@@ -26,10 +26,10 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     /** Dessine les connexions du graphe **/
     private fun drawConnexions(n: ArrayList<Connexion>) {
         var p:Path = Path()
-        val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        pathPaint.style= Paint.Style.STROKE
         if (n.isNotEmpty()) {
             for (i in n) {
+                val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+                pathPaint.style= Paint.Style.STROKE
                 pathPaint.strokeWidth = i.getEpaisseur()
                 pathPaint.color=i.getcouleur()
                 val pos:FloatArray = i.getMiddle()

@@ -47,7 +47,6 @@ class Graph {
     fun getConnexion(x: Float, y: Float): Connexion? {
         var co: Connexion? = null
         for (c:Connexion in connexions) {
-           // Log.i("","x:$x |${c.getMiddle()[0]}||y:$y| ${c.getMiddle()[1]}")
                val f = c.getMiddle()
             if ((x>= c.getMiddle()[0]- 20F && x<= c.getMiddle()[0]+20F) && (y>= c.getMiddle()[1]- 20F && y<= c.getMiddle()[1]+20F) ) {
                 co = c

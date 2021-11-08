@@ -59,7 +59,7 @@ class ConnexionUpdateDialog: Dialog {
                 if( input.text!=null){
                     this.c.setetiquette(input.text.toString())
                     this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
                     Toast.makeText(this.m,context.getString(R.string.etiquette_forget_text),Toast.LENGTH_LONG).show()
@@ -94,9 +94,9 @@ class ConnexionUpdateDialog: Dialog {
             }
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 if(check != 0){
-                    this.c.setcouleur(check)
-                    //this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    this.ga.getConnexion(c)!!.setcouleur(check)
+                    this.m.getimg().invalidate()
+                    //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }
                 dialog.dismiss()
@@ -127,7 +127,7 @@ class ConnexionUpdateDialog: Dialog {
                 if(check != 0F){
                     this.c.setEpaisseur(check)
                     this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                   // this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }
                 dialog.dismiss()

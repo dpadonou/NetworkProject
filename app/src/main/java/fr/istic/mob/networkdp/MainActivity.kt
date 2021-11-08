@@ -169,36 +169,45 @@ class MainActivity : AppCompatActivity() {
                             upy = event.y
                             val nfintp: Node? = ga.getNode(upx, upy)
                             if (nfintp != null && ndepart !=null) {
-                                nfin = nfintp
-                                val c = Connexion(ndepart!!, nfin)
-                                val cbis = Connexion(nfin, ndepart!!)
-                                if(ga.getConnexion(c) == null && ga.getConnexion(cbis) == null){
-                                    val alertDialog = AlertDialog.Builder(this@MainActivity)
-                                    val input = EditText(this@MainActivity)
-                                    alertDialog.setTitle(resources.getString(R.string.connexion_label_text))
-                                    alertDialog.setMessage(resources.getString(R.string.connexion_label))
-                                    alertDialog.setView(input)
-                                    alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-                                        //methode du bouton Valider
-                                        val valsaisie = input.text.toString()
-                                        if(valsaisie != ""){
-                                            c.setetiquette(valsaisie)
-                                            ga.addConnexion(c)
-                                            ga.settmpConnexion(null)
-                                            img.invalidate()
-                                            dialog.dismiss()
-                                        }else{
-                                            Toast.makeText(this,resources.getString(R.string.etiquette_forget_text),Toast.LENGTH_LONG).show()
-                                        }
+                                if(nfintp != ndepart){
+                                    nfin = nfintp
+                                    val c = Connexion(ndepart!!, nfin)
+                                    val cbis = Connexion(nfin, ndepart!!)
+                                    if(ga.getConnexion(c) == null && ga.getConnexion(cbis) == null){
+                                        val alertDialog = AlertDialog.Builder(this@MainActivity)
+                                        val input = EditText(this@MainActivity)
+                                        alertDialog.setTitle(resources.getString(R.string.connexion_label_text))
+                                        alertDialog.setMessage(resources.getString(R.string.connexion_label))
+                                        alertDialog.setView(input)
+                                        alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
+                                            //methode du bouton Valider
+                                            val valsaisie = input.text.toString()
+                                            if(valsaisie != ""){
+                                                c.setetiquette(valsaisie)
+                                                ga.addConnexion(c)
+                                                ga.settmpConnexion(null)
+                                                img.invalidate()
+                                                dialog.dismiss()
+                                            }else{
+                                                Toast.makeText(this,resources.getString(R.string.etiquette_forget_text),Toast.LENGTH_LONG).show()
+                                            }
 
+                                        }
+                                        alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
+                                            dialog.dismiss()
+                                        }
+                                        alertDialog.show()
+                                    }else{
+                                        Toast.makeText(this,getString(R.string.connexion_creation_error),Toast.LENGTH_LONG).show()
                                     }
-                                    alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-                                        dialog.dismiss()
-                                    }
-                                    alertDialog.show()
-                                }else{
-                                    Toast.makeText(this,getString(R.string.connexion_creation_error),Toast.LENGTH_LONG).show()
+                                }else {
+                                    ga.settmpConnexion(null)
+                                    img.invalidate()
                                 }
+
+                            }else{
+                                ga.settmpConnexion(null)
+                                img.invalidate()
                             }
                         }
                         MotionEvent.ACTION_MOVE -> {

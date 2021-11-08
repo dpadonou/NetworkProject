@@ -2,6 +2,7 @@ package fr.istic.mob.networkdp
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import kotlinx.serialization.Serializable
 
 @Serializable
