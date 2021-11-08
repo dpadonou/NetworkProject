@@ -9,11 +9,7 @@ class Graph {
     private val nodes: ArrayList<Node> = ArrayList()
     private val connexions: ArrayList<Connexion> = ArrayList()
     private var tmpConnexion:Connexion? = null
-    private var selectedConnexion:Connexion? = null
 
-   /* constructor(titre: String) {
-        this.titre = titre
-    }*/
     /** Methode pour recuperer le titre **/
     fun getTitre() : String{
         return this.titre
@@ -26,14 +22,6 @@ class Graph {
     fun gettmpConnexion() : Connexion?{
         return this.tmpConnexion
     }
-    /** Methode pour attribuer une connexion selectionnée **/
-    fun setselectedConnexion(c:Connexion?){
-        this.selectedConnexion = c
-    }
-    /** Methode pour recuperer la connexion selectionnée **/
-    fun getselectedConnexion() : Connexion?{
-        return this.selectedConnexion
-    }
     /** Methode pour attribuer un nom au graphe **/
     fun setTitre(name:String){
         this.titre = name
@@ -45,7 +33,7 @@ class Graph {
             nodes.add(s)
         }
     }
-
+   /** recupérer un noeud du graphe par la position du centre **/
     fun getNode(x: Float, y: Float): Node? {
         var no: Node? = null
         for (n: Node in nodes) {
@@ -55,6 +43,7 @@ class Graph {
         }
         return no
     }
+    /** recuprérer une connexion du graphe par la position du milieu **/
     fun getConnexion(x: Float, y: Float): Connexion? {
         var co: Connexion? = null
         for (c:Connexion in connexions) {
@@ -66,16 +55,17 @@ class Graph {
         }
         return co
     }
+    /** Verifier si une connexion appartient au graphe **/
     fun getConnexion(c:Connexion): Connexion? {
         var con:Connexion?  = null
         for (co:Connexion in connexions) {
-            if (co == c) {
+            if (co.equals(c)) {
                 con=co
             }
         }
         return con
     }
-
+   /** Retourne la liste des noeuds du graphe **/
     fun getNodeList(): ArrayList<Node> {
         return this.nodes
     }

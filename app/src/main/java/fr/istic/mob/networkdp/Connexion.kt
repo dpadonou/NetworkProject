@@ -20,21 +20,21 @@ class Connexion(private var debut: Node) {
     }
 
     /**
-     * getters for debut
+     * getters pour le noeud de depart de la connexion
      */
     fun getEmitter(): Node {
         return this.debut
     }
 
     /**
-     * getters  for fin
+     * getters pour le noeud de fin de la connexion
      */
     fun getReceiver(): Node {
         return this.fin
     }
 
     /**
-     * getters and setters for fin
+     * getters and setters pour l'etiquette de la connexion
      */
     fun getetiquette(): String {
         return this.etiquette
@@ -67,4 +67,20 @@ class Connexion(private var debut: Node) {
           c[1] = (this.debut.getPosY() + this.fin.getPosY())/2
         return c
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Connexion
+
+        if (this.debut != other.debut) return false
+        if (this.fin != other.fin) return false
+        if (this.etiquette != other.etiquette) return false
+
+        return true
+    }
+
+
+
 }

@@ -28,11 +28,11 @@ class ConnexionUpdateDialog: Dialog {
         /** Supprimez la connexion **/
         findViewById<Button>(R.id.btn_delete_connex).setOnClickListener {
             val alertDialog = AlertDialog.Builder(this.context)
-            alertDialog.setTitle("Message de confirmation")
-            alertDialog.setMessage("Voulez vous vraiment supprimer cet connexion?")
+            alertDialog.setTitle(this.context.getString(R.string.confirm_text))
+            alertDialog.setMessage(context.getString(R.string.confirm_drop_connexion))
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 if(this.ga.deleteConnexion(this.c)){
-                    Toast.makeText(this.context,"Suppression réussie", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this.context,context.getString(R.string.drop_success_text), Toast.LENGTH_LONG).show()
                     dialog.dismiss()
                     this.m.getimg().invalidate()
                     this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
@@ -50,8 +50,8 @@ class ConnexionUpdateDialog: Dialog {
         findViewById<Button>(R.id.btn_connex_etiq_update).setOnClickListener {
             val alertDialog = AlertDialog.Builder(this.m)
             val input = EditText(this.m)
-            alertDialog.setTitle("Etiquette de la connexion")
-            alertDialog.setMessage("Entrez le nom de l'etiquette")
+            alertDialog.setTitle(context.getString(R.string.connexion_label_text))
+            alertDialog.setMessage(context.getString(R.string.connexion_label))
             alertDialog.setView(input)
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 //methode du bouton Valider
@@ -62,7 +62,7 @@ class ConnexionUpdateDialog: Dialog {
                     this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
-                    Toast.makeText(this.m,"Veuillez entrez un nom pour l'etiquette",Toast.LENGTH_LONG).show()
+                    Toast.makeText(this.m,context.getString(R.string.etiquette_forget_text),Toast.LENGTH_LONG).show()
                 }
                 dialog.dismiss()
             }
@@ -74,8 +74,8 @@ class ConnexionUpdateDialog: Dialog {
         /** Modifiez la couleur de la connexion **/
         findViewById<Button>(R.id.btn_modify_connexColor).setOnClickListener {
             val alertDialog = AlertDialog.Builder(this.m)
-            alertDialog.setTitle("Couleur de la connexion")
-            alertDialog.setMessage("Selectionnez une couleur")
+            alertDialog.setTitle(context.getString(R.string.connexion_color_title))
+            alertDialog.setMessage(context.getString(R.string.color_text))
             val inflater: LayoutInflater = this.layoutInflater
             val dv: View = inflater.inflate(R.layout.layout_color_node, null)
             alertDialog.setView(dv)
@@ -109,8 +109,8 @@ class ConnexionUpdateDialog: Dialog {
         /** Modifiez l'epaisseur de la connexion **/
         findViewById<Button>(R.id.btn_modifiy_connexWidth).setOnClickListener {
             val alertDialog = AlertDialog.Builder(this.m)
-            alertDialog.setTitle("Epaisseur de la connexion")
-            alertDialog.setMessage("Selectionnez une taille")
+            alertDialog.setTitle(context.getString(R.string.connexion_width_title))
+            alertDialog.setMessage(context.getString(R.string.connexion_width_text))
             val inflater: LayoutInflater = this.layoutInflater
             val dv: View = inflater.inflate(R.layout.layout_connexion_width, null)
             alertDialog.setView(dv)

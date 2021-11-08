@@ -50,4 +50,24 @@
     <string name="large_connex_text">Très large</string>
     <string name="graph_name_text">Nom du graphe :</string>
     <string name="img_description_text">plan</string>
+    <string name="confirm_text">Message de confirmation</string>
+    <string name="confirm_drop_connexion">Voulez vous vraiment supprimer cet connexion?</string>
+    <string name="drop_success_text">Suppression réussie</string>
+    <string name="connexion_label_text">Etiquette de la connexion</string>
+    <string name="connexion_label">Entrez le nom de l\'etiquette</string>
+    <string name="etiquette_forget_text">Vous devez donner un nom à la connexion</string>
+    <string name="connexion_color_title">Couleur de la connexion</string>
+    <string name="color_text">Selectionnez une couleur</string>
+    <string name="connexion_width_title">Epaisseur de la connexion</string>
+    <string name="connexion_width_text">Selectionnez une taille</string>
+    <string name="confim_drop_node">Voulez vous vraiment supprimer cet objet?</string>
+    <string name="node_etiquette_modify">Vous devez donner un nouveau nom d\'etiquette</string>
+    <string name="node_color_title">Couleur du noeud</string>
+    <string name="connexion_creation_error">Impossible de créer plusieurs connexions entre deux noeuds</string>
+    <string name="node_creation_error">restez dans le cadre</string>
+    <string name="save_success">Sauvegarde réussie</string>
+    <string name="import_success">Importation réussie</string>
+    <string name="import_plan_success">Nouveau plan importé avec succès</string>
+
+
 </resources>

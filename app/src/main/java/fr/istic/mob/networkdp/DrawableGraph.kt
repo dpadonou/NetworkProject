@@ -13,7 +13,7 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
         textPaint.color = Color.BLACK
         textPaint.textSize = 40F
     }
-
+   /** Dessine les noeuds du graphe **/
     private fun drawNodes(n: ArrayList<Node>) {
         if (n.isNotEmpty()) {
             for (i in n) {
@@ -23,7 +23,7 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
             }
         }
     }
-
+    /** Dessine les connexions du graphe **/
     private fun drawConnexions(n: ArrayList<Connexion>) {
         var p:Path = Path()
         val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -45,7 +45,7 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
             }
         }
     }
-
+   /** dessine la connexion temporaire **/
     private fun drawTempConnexion(tempConnexion:Connexion?) {
         var p:Path = Path()
         val pathtempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -59,20 +59,6 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
             c.drawPath(p,pathtempPaint)
         }
     }
-    private fun drawSelectedConnexion(con:Connexion?) {
-        var p:Path = Path()
-        val pathtempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        pathtempPaint.style = Paint.Style.STROKE
-        if (con != null) {
-            val pos:FloatArray = con.getMiddle()
-            pathtempPaint.strokeWidth = con.getEpaisseur()
-            pathtempPaint.color=con.getcouleur()
-            p.moveTo(con.getEmitter().getPosX(),con.getEmitter().getPosY())
-            p.quadTo((pos[0] + con.mx) / 2, (pos[1] + con.my) / 2,con.getReceiver().getPosX(),con.getReceiver().getPosX());
-           // p.lineTo(tempConnexion.getReceiver().getPosX(),tempConnexion.getReceiver().getPosY())
-            c.drawPath(p,pathtempPaint)
-        }
-    }
 
     override fun draw(p0: Canvas) {
         this.c = p0
@@ -83,11 +69,9 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     }
 
     override fun setAlpha(p0: Int) {
-        TODO("Not yet implemented")
     }
 
     override fun setColorFilter(p0: ColorFilter?) {
-        TODO("Not yet implemented")
     }
 
     override fun getOpacity(): Int {

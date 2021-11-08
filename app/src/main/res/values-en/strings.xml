@@ -15,7 +15,7 @@
 
     <string name="dialognode_text">Enter the label of the node</string>
     <string name="dialognode_msg">You cannot draw in the same location</string>
-    <string name="import_graph_msg">he has not network with this name in the memory</string>
+    <string name="import_graph_msg">He has not network with this name in the memory</string>
     <string name="email_subject">Graphe</string>
 
     <string name="dialoggraph_text">Enter your network name</string>
@@ -25,11 +25,11 @@
     <string name="annuler_text">Cancel</string>
 
     <string name="plan_text">plan</string>
-    <string name="sauvegarder_le_graphe">Sauvegarder le graphe</string>
-    <string name="import_graph">Afficher un graphe sauvegardé</string>
-    <string name="import_plan">Importer d\'autres plans</string>
-    <string name="envoyer_la_capture_du_graphe">Envoyer la capture du graphe</string>
-    <string name="delete_node_text">delete the node</string>
+    <string name="sauvegarder_le_graphe">Save the network</string>
+    <string name="import_graph">Display a saved network</string>
+    <string name="import_plan">Import other plans</string>
+    <string name="envoyer_la_capture_du_graphe">Share the network capture</string>
+    <string name="delete_node_text">Delete the node</string>
     <string name="modifiy_node_label_text">Modify a label</string>
     <string name="modify_node_color_text">Modify the color</string>
     <string name="noir_text">Black</string>
@@ -39,13 +39,31 @@
     <string name="orange_text">Orange</string>
     <string name="magenta_text">Magenta</string>
     <string name="cyan_text">Cyan</string>
-    <string name="delete_connex_text">Supprimer la connexion</string>
-    <string name="modify_connex_label_text">Modifiez l\'etiquette de la connexion</string>
-    <string name="modify_connex_color">Modifiez la couleur de la connexion</string>
-    <string name="modify_connex_width_text">Modifiez l\'epaisseur de la connexion</string>
+    <string name="delete_connex_text">Delete the connection</string>
+    <string name="modify_connex_label_text">Modify the connection label</string>
+    <string name="modify_connex_color">Modify the connection color</string>
+    <string name="modify_connex_width_text">Modify the connection width</string>
     <string name="small_connex_text">Small</string>
     <string name="meduim_connex_text">Medium</string>
     <string name="large_connex_text">Large</string>
-    <string name="graph_name_text">Nom du graphe :</string>
+    <string name="graph_name_text">Network name : </string>
     <string name="img_description_text">plan</string>
+    <string name="confirm_text">Confirm message</string>
+    <string name="confirm_drop_connexion">Do you really want to delete this connection?</string>
+    <string name="drop_success_text">Successful deletion</string>
+    <string name="connexion_label_text">Connection label</string>
+    <string name="connexion_label">Enter the label name</string>
+    <string name="etiquette_forget_text">You must give a name for the connection</string>
+    <string name="connexion_color_title">Color of the connection</string>
+    <string name="color_text">Select a color</string>
+    <string name="connexion_width_title">Connection width</string>
+    <string name="connexion_width_text">Select a width</string>
+    <string name="confim_drop_node">Do you really want delete this node?</string>
+    <string name="node_etiquette_modify">You must give a name for the node</string>
+    <string name="node_color_title">Color of the node</string>
+    <string name="connexion_creation_error">Cannot create multiple connections between two nodes</string>
+    <string name="node_creation_error">Stay in the plan dimension</string>
+    <string name="save_success">Successful backup</string>
+    <string name="import_success">Successful import</string>
+    <string name="import_plan_success">New plan successfully imported</string>
 </resources>

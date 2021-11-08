@@ -25,11 +25,11 @@ class nodeUpdateDialog : Dialog {
         /** Supprimez le noeud **/
         findViewById<Button>(R.id.btn_delete_connex).setOnClickListener {
             val alertDialog = AlertDialog.Builder(this.context)
-            alertDialog.setTitle("Message de confirmation")
-            alertDialog.setMessage("Voulez vous vraiment supprimer cet objet?")
+            alertDialog.setTitle(context.getString(R.string.confirm_text))
+            alertDialog.setMessage(context.getString(R.string.confim_drop_node))
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 if(this.ga.deleteNode(this.n)){
-                    Toast.makeText(this.context,"Suppression réussie", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this.context,context.getString(R.string.drop_success_text), Toast.LENGTH_LONG).show()
                     dialog.dismiss()
                     this.m.getimg().invalidate()
                     this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
@@ -59,7 +59,7 @@ class nodeUpdateDialog : Dialog {
                     this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
-                    Toast.makeText(this.m,this.m.resources.getString(R.string.dialognode_msg),Toast.LENGTH_LONG).show()
+                    Toast.makeText(this.m,context.getString(R.string.node_etiquette_modify),Toast.LENGTH_LONG).show()
                 }
                 dialog.dismiss()
             }
@@ -71,8 +71,8 @@ class nodeUpdateDialog : Dialog {
         /** modifiez la couleur **/
         findViewById<Button>(R.id.btn_modify_connexColor).setOnClickListener {
             val alertDialog = AlertDialog.Builder(this.m)
-            alertDialog.setTitle(this.m.resources.getString(R.string.noeud_etiquette))
-            alertDialog.setMessage(this.m.resources.getString(R.string.dialognode_text))
+            alertDialog.setTitle(context.getString(R.string.node_color_title))
+            alertDialog.setMessage(context.getString(R.string.color_text))
              val inflater:LayoutInflater = this.layoutInflater
             val dv: View = inflater.inflate(R.layout.layout_color_node, null)
             alertDialog.setView(dv)

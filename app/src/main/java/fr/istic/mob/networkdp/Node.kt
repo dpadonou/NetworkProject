@@ -43,4 +43,19 @@ class Node(private var titre: String) {
     fun setPosY(y: Float) {
         this.posY = y
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Node
+
+        if (this.titre != other.titre) return false
+        if (this.posX != other.posX) return false
+        if (this.posY != other.posY) return false
+
+        return true
+    }
+
+
 }

@@ -23,6 +23,7 @@ import android.os.Build
 import android.os.Environment
 import android.view.*
 import android.widget.*
+import androidx.core.content.FileProvider
 
 
 class MainActivity : AppCompatActivity() {
@@ -42,13 +43,14 @@ class MainActivity : AppCompatActivity() {
     private var imgWidth: Float = 0F
     private val pickImage = 100
     private var imageUri: Uri? = null
-    private var name:String = ""
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         graphTitre = findViewById(R.id.graphTitre)
         img = findViewById(R.id.imageView)
+        img.background = getDrawable(R.drawable.plan_)
         ga = Graph()
 
         img.viewTreeObserver.addOnGlobalLayoutListener(OnGlobalLayoutListener {
@@ -58,9 +60,10 @@ class MainActivity : AppCompatActivity() {
         if(savedInstanceState!=null){
             val json = savedInstanceState.getSerializable("graph")
             val json2 = savedInstanceState.getSerializable("mode")
+           // val jdo = savedInstanceState.getSerializable("drawable")
             ga = Json.decodeFromString("$json")
             mode = Json.decodeFromString("$json2")
-            img.invalidate()
+            //img.background = Json.decodeFromString("$jdo")
             val d = DrawableGraph(ga)
             img.setImageDrawable(d)
             faire(mode)
@@ -73,6 +76,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
     fun getimg():ImageView{
         return this.img
     }
@@ -151,7 +155,6 @@ class MainActivity : AppCompatActivity() {
                 this.title = sb.toString()
                 var ndepart: Node? = null
                 var ntp: Node?
-                var tmpconnexion: Connexion?
                 lateinit var nfin: Node
                 img.setOnTouchListener { _, event ->
                     when (event.action) {
@@ -164,9 +167,6 @@ class MainActivity : AppCompatActivity() {
                         MotionEvent.ACTION_UP -> {
                             upx = event.x
                             upy = event.y
-                            ga.settmpConnexion(null)
-                            img.invalidate()
-                            //img.setImageDrawable(DrawableGraph(ga))
                             val nfintp: Node? = ga.getNode(upx, upy)
                             if (nfintp != null && ndepart !=null) {
                                 nfin = nfintp
@@ -175,8 +175,8 @@ class MainActivity : AppCompatActivity() {
                                 if(ga.getConnexion(c) == null && ga.getConnexion(cbis) == null){
                                     val alertDialog = AlertDialog.Builder(this@MainActivity)
                                     val input = EditText(this@MainActivity)
-                                    alertDialog.setTitle("Etiquette de la connexion")
-                                    alertDialog.setMessage("Entrez le nom de l'etiquette")
+                                    alertDialog.setTitle(resources.getString(R.string.connexion_label_text))
+                                    alertDialog.setMessage(resources.getString(R.string.connexion_label))
                                     alertDialog.setView(input)
                                     alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
                                         //methode du bouton Valider
@@ -184,10 +184,11 @@ class MainActivity : AppCompatActivity() {
                                         if(valsaisie != ""){
                                             c.setetiquette(valsaisie)
                                             ga.addConnexion(c)
-                                            img.setImageDrawable(DrawableGraph(ga))
+                                            ga.settmpConnexion(null)
+                                            img.invalidate()
                                             dialog.dismiss()
                                         }else{
-                                            Toast.makeText(this,"Veuillez entrez un nom pour l'etiquette",Toast.LENGTH_LONG).show()
+                                            Toast.makeText(this,resources.getString(R.string.etiquette_forget_text),Toast.LENGTH_LONG).show()
                                         }
 
                                     }
@@ -196,7 +197,7 @@ class MainActivity : AppCompatActivity() {
                                     }
                                     alertDialog.show()
                                 }else{
-                                    Toast.makeText(this,"Impossible de créer plusieurs connexions entre deux noeuds",Toast.LENGTH_LONG).show()
+                                    Toast.makeText(this,getString(R.string.connexion_creation_error),Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
@@ -209,6 +210,7 @@ class MainActivity : AppCompatActivity() {
                                 img.invalidate()
                                // img.setImageDrawable(DrawableGraph(ga))
                             }
+                            false
                         }
                     }
                     true
@@ -233,7 +235,7 @@ class MainActivity : AppCompatActivity() {
                                 //Création de la boite de dialogue et de ses actions
                                     createNodeDialog()
                                 }else{
-                                    Toast.makeText(this,"restez dans le cadre",Toast.LENGTH_LONG).show()
+                                    Toast.makeText(this,getString(R.string.node_creation_error),Toast.LENGTH_LONG).show()
 
                                 }
                             }
@@ -260,10 +262,10 @@ class MainActivity : AppCompatActivity() {
                                 yP = event.y
                                 Log.i("","yes")
                                 if(ga.getNode(xP,yP) != null){
-                                    val d:nodeUpdateDialog = nodeUpdateDialog(this,this.ga,ga.getNode(xP,yP)!!)
+                                    val d = nodeUpdateDialog(this,this.ga,ga.getNode(xP,yP)!!)
                                     d.show()
                                 }else if(ga.getConnexion(xP,yP) != null){
-                                    val cd:ConnexionUpdateDialog = ConnexionUpdateDialog(this,this.ga,ga.getConnexion(xP,yP)!!)
+                                    val cd = ConnexionUpdateDialog(this,this.ga,ga.getConnexion(xP,yP)!!)
                                     cd.show()
                                 }
                             }
@@ -301,15 +303,10 @@ class MainActivity : AppCompatActivity() {
                                     img.invalidate()
                                 }
                             }else if(selectedConnex!=null){
-                                //Log.i("","Let's go")
                                 selectedConnex!!.isCurved=true
                                 selectedConnex!!.mx = mx
                                 selectedConnex!!.my = my
-                                this.ga.setselectedConnexion(selectedConnex)
                                 img.setImageDrawable(DrawableGraph(this.ga))
-                                //selectedConnex!!.mx = mx
-                                //selectedConnex!!.my = my
-                               // img.invalidate()
                             }
 
                         }
@@ -325,13 +322,13 @@ class MainActivity : AppCompatActivity() {
             States.SAVE -> {
                 this.title = resources.getString(R.string.app_name)
                 if(ga.getTitre() != ""){
-                    saveintofile(ga.getTitre())
                     Toast.makeText(this,resources.getString(R.string.dialoggraph_msg),Toast.LENGTH_LONG).show()
+                    saveintofile(ga.getTitre())
+                    Toast.makeText(this,getString(R.string.save_success),Toast.LENGTH_LONG).show()
                 }
             }
             States.IMPORT_NETWORK -> {
                 this.title = resources.getString(R.string.app_name)
-                var name1:String = ""
                 val alertDialog = AlertDialog.Builder(this@MainActivity)
                 val input = EditText(this@MainActivity)
                 alertDialog.setTitle(resources.getString(R.string.graph_title))
@@ -343,6 +340,7 @@ class MainActivity : AppCompatActivity() {
                             ga = gettofile(input.text.toString())!!
                             img.invalidate()
                             img.setImageDrawable(DrawableGraph(ga))
+                            Toast.makeText(this,getString(R.string.import_success),Toast.LENGTH_LONG).show()
                         }catch (e:IOException){
                             e.printStackTrace()
                             Toast.makeText(this,resources.getString(R.string.import_graph_msg),Toast.LENGTH_LONG).show()
@@ -364,7 +362,8 @@ class MainActivity : AppCompatActivity() {
             }
             States.SEND_NETWORK -> {
                 this.title = resources.getString(R.string.app_name)
-                screenshot()
+                val f = screenshot()
+                this.startActivity(f)
             }
         }
     }
@@ -376,15 +375,11 @@ class MainActivity : AppCompatActivity() {
         if(n.isNotEmpty()){
             var myf:File = File(path)
             val outputStream: FileOutputStream = FileOutputStream(myf)
-            //var myout: OutputStreamWriter = OutputStreamWriter(outputStream)
             val json = Json.encodeToString(ga)
-            //myout.append
-            //outputStream.w
-           // myout.close()
              outputStream.write(json.toByteArray())
              outputStream.flush()
              outputStream.close()
-            Toast.makeText(this,"Graphe"+ga.getTitre()+"sauvegardé avec succés",Toast.LENGTH_LONG).show()
+            //Toast.makeText(this,"Graphe"+ga.getTitre()+"sauvegardé avec succés",Toast.LENGTH_LONG).show()
         }
 
     }
@@ -410,56 +405,36 @@ class MainActivity : AppCompatActivity() {
 
     }
     /** Boite de dialogue pour la creation de noeud **/
-    fun createNodeDialog(){
-        val alertDialog = AlertDialog.Builder(this@MainActivity)
-        val input = EditText(this@MainActivity)
-        alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
-        alertDialog.setMessage(resources.getString(R.string.dialognode_text))
-        alertDialog.setView(input)
-        alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-            //methode du bouton Valider
-            val valsaisie = input.text.toString()
-            if(ga.getNode(xP,yP) == null){
-                ga.addNode(Node(xP, yP, valsaisie))
-                //img.invalidate()
-                img.setImageDrawable(DrawableGraph(ga))
+    private fun createNodeDialog(){
+        if(this.ga.getTitre().isEmpty()){
+            GraphTitreDialog()
+        }else{
+            val alertDialog = AlertDialog.Builder(this@MainActivity)
+            val input = EditText(this@MainActivity)
+            alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
+            alertDialog.setMessage(resources.getString(R.string.dialognode_text))
+            alertDialog.setView(input)
+            alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
+                //methode du bouton Valider
+                val valsaisie = input.text.toString()
+                if(ga.getNode(xP,yP) == null){
+                    ga.addNode(Node(xP, yP, valsaisie))
+                    img.setImageDrawable(DrawableGraph(ga))
 
-            }else{
-                Toast.makeText(this,resources.getString(R.string.dialognode_msg),Toast.LENGTH_LONG).show()
-            }
-            dialog.dismiss()
-        }
-        alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-            dialog.dismiss()
-        }
-        alertDialog.show()
-    }
-    /** Boite de dialogue pour la creation de noeud **/
-    fun createConnexionDialog(c:Connexion){
-        val alertDialog = AlertDialog.Builder(this@MainActivity)
-        val input = EditText(this@MainActivity)
-        alertDialog.setTitle("Etiquette de la connexion")
-        alertDialog.setMessage("Entrez le nom de l'etiquette")
-        alertDialog.setView(input)
-        alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-            //methode du bouton Valider
-            val valsaisie = input.text.toString()
-            if(valsaisie != ""){
-                c.setetiquette(valsaisie)
+                }else{
+                    Toast.makeText(this,resources.getString(R.string.dialognode_msg),Toast.LENGTH_LONG).show()
+                }
                 dialog.dismiss()
-            }else{
-                Toast.makeText(this,"Veuillez entrez un nom pour l'etiquette",Toast.LENGTH_LONG).show()
             }
+            alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            alertDialog.show()
+        }
 
-        }
-        alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-            dialog.dismiss()
-        }
-        alertDialog.show()
     }
     /** Boite de dialogue pour recuperer le titre du graphe  */
-    @SuppressLint("StringFormatInvalid")
-    fun GraphTitreDialog(){
+    private fun GraphTitreDialog(){
         val alertDialog = AlertDialog.Builder(this@MainActivity)
         val input = EditText(this@MainActivity)
         alertDialog.setTitle(resources.getString(R.string.graph_title))
@@ -468,7 +443,7 @@ class MainActivity : AppCompatActivity() {
         alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
             if(input.text!=null){
                 ga.setTitre(input.text.toString())
-                graphTitre.setText(resources.getString(R.string.graph_name_text) +" "+ga.getTitre())
+                graphTitre.text= resources.getString(R.string.graph_name_text) +" "+ga.getTitre()
                 graphTitre.invalidate()
                 dialog.dismiss()
             }
@@ -487,6 +462,7 @@ class MainActivity : AppCompatActivity() {
                 val inputStream: InputStream? = contentResolver.openInputStream(imageUri!!)
                 val bg = Drawable.createFromStream(inputStream, imageUri.toString())
                 img.background = bg
+                Toast.makeText(this,getString(R.string.import_plan_success),Toast.LENGTH_LONG).show()
             } catch (e: FileNotFoundException) {
                   e.message
                   Toast.makeText(this,e.message,Toast.LENGTH_LONG).show()
@@ -494,11 +470,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
     /** faire un screenshot du réseau actuel **/
-    fun screenshot(){
+    private fun screenshot():Intent{
         val dirPath = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS).toString() + "/Network_DP"
         } else {
-            TODO("VERSION.SDK_INT < Q")
+            getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/Network_DP"
         }
         val file = File(dirPath)
 
@@ -530,111 +506,19 @@ class MainActivity : AppCompatActivity() {
         /** lancer l'intention de partage **/
         val emailIntent = Intent(Intent.ACTION_SEND)
         emailIntent.type = "image/jpeg"
-        val email_destinataire = arrayOf("arnauld-cyriaque.djedjemel@etudiant.univ-rennes1.fr")
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, email_destinataire)
-        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path))
+        emailIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, this.applicationContext.packageName + ".provider", image))
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.app_name)+" "+resources.getString(R.string.email_subject)+"-"+this.ga.getTitre())
+        return emailIntent
     }
     /** Pour sauvegarder l'etat lors de la rotation **/
     override fun onSaveInstanceState(outState: Bundle) {
-
         val json = Json.encodeToString(ga)
         val json2 = Json.encodeToString(mode)
+       // val d = Json.encodeToString(this.img.background)
         outState.putSerializable("graph",json)
         outState.putSerializable("mode",json2)
+        //outState.putSerializable("drawable",d)
         super.onSaveInstanceState(outState)
     }
-    /** Menu contextuel **/
-    /*override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        val inflate:MenuInflater = menuInflater
-        inflate.inflate(R.menu.updatenode,menu)
-    }*/
-
-    /*override fun onContextItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.deleteNode -> {
-                val alertDialog = AlertDialog.Builder(this@MainActivity)
-                alertDialog.setTitle("Message de confirmation")
-                alertDialog.setMessage("Voulez vous vraiment supprimer cet objet?")
-                alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-                    /*if(this.ga.deleteNode(n)){
-                        Toast.makeText(this,"Suppression réussie",Toast.LENGTH_LONG).show()
-                    }*/
-                }
-                alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                alertDialog.show()
-            }
-            R.id.changeNodeLabel -> {
-                val alertDialog = AlertDialog.Builder(this@MainActivity)
-                val input = EditText(this@MainActivity)
-                alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
-                alertDialog.setMessage(resources.getString(R.string.dialognode_text))
-                alertDialog.setView(input)
-                alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-                   /* if(input.text!=null){
-                        n.setTitre(input.text.toString())
-                    }*/
-                    dialog.dismiss()
-                }
-                alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                alertDialog.show()
-            }
-            R.id.changeNodeColor -> {
-
-            }
-        }
-        return super.onContextItemSelected(item)
-    }*/
-   /* fun updateNodepopUp(v:View,n:Node){
-        var popup:PopupMenu = PopupMenu(this,v,Gravity.CENTER)
-        popup.inflate(R.menu.updatenode)
-        popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
-
-            when (item!!.itemId) {
-                R.id.deleteNode -> {
-                    val alertDialog = AlertDialog.Builder(this@MainActivity)
-                    alertDialog.setTitle("Message de confirmation")
-                    alertDialog.setMessage("Voulez vous vraiment supprimer cet objet?")
-                    alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-                         if(this.ga.deleteNode(n)){
-                             Toast.makeText(this,"Suppression réussie",Toast.LENGTH_LONG).show()
-                         }
-                    }
-                    alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    alertDialog.show()
-                }
-                R.id.changeNodeLabel -> {
-                    val alertDialog = AlertDialog.Builder(this@MainActivity)
-                    val input = EditText(this@MainActivity)
-                    alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
-                    alertDialog.setMessage(resources.getString(R.string.dialognode_text))
-                    alertDialog.setView(input)
-                    alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-                        if(input.text!=null){
-                            n.setTitre(input.text.toString())
-                        }
-                        dialog.dismiss()
-                    }
-                    alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    alertDialog.show()
-                }
-                R.id.changeNodeColor -> {
-
-                }
-            }
-
-            true
-        })
-        popup.show()
-    }*/
 
 }
