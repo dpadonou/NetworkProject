@@ -3,7 +3,6 @@ package fr.istic.mob.networkdp
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -35,10 +34,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var graphTitre: TextView
     private var downX: Float = 0F
     private var downY: Float = 0F
-    private var upx: Float = 0F
-    private var upy: Float = 0F
-    private var mx: Float = 0F
-    private var my: Float = 0F
+    private var upX: Float = 0F
+    private var upY: Float = 0F
+    private var mX: Float = 0F
+    private var mY: Float = 0F
     private var imgHeight: Float = 0F
     private var imgWidth: Float = 0F
     private val pickImage = 100
@@ -77,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun getimg():ImageView{
+    fun getImg():ImageView{
         return this.img
     }
 
@@ -165,9 +164,9 @@ class MainActivity : AppCompatActivity() {
                             Log.i("", "Down : ${ndepart.toString()}")
                         }
                         MotionEvent.ACTION_UP -> {
-                            upx = event.x
-                            upy = event.y
-                            val nfintp: Node? = ga.getNode(upx, upy)
+                            upX = event.x
+                            upY = event.y
+                            val nfintp: Node? = ga.getNode(upX, upY)
                             if (nfintp != null && ndepart !=null) {
                                 if(nfintp != ndepart){
                                     nfin = nfintp
@@ -211,9 +210,9 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         MotionEvent.ACTION_MOVE -> {
-                            mx = event.x
-                            my = event.y
-                            ntp = Node(mx, my, "")
+                            mX = event.x
+                            mY = event.y
+                            ntp = Node(mX, mY, "")
                             if (ndepart != null) {
                                 ga.settmpConnexion(Connexion(ndepart!!, ntp!!))
                                 img.invalidate()
@@ -298,23 +297,23 @@ class MainActivity : AppCompatActivity() {
                                 selectNode = ga.getNode(downX, downY)
                             }else if(ga.getConnexion(downX,downY)!=null){
                                 selectedConnex = ga.getConnexion(downX,downY)
-                                //selectedConnex!!.mx = downX
+                                //selectedConnex!!.mX = downX
                                 //selectedConnex!!.my = downY
                             }
                         }
                         MotionEvent.ACTION_MOVE -> {
-                            mx = event.x
-                            my = event.y
+                            mX = event.x
+                            mY = event.y
                             if (selectNode != null) {
-                                if((mx>=30F && mx<=imgWidth-30F) && (my>=30F && my<=imgHeight-30F) ){
-                                    selectNode!!.setPosY(my)
-                                    selectNode!!.setPosX(mx)
+                                if((mX>=30F && mX<=imgWidth-30F) && (mY>=30F && mY<=imgHeight-30F) ){
+                                    selectNode!!.setPosY(mY)
+                                    selectNode!!.setPosX(mX)
                                     img.invalidate()
                                 }
                             }else if(selectedConnex!=null){
                                 selectedConnex!!.isCurved=true
-                                selectedConnex!!.mx = mx
-                                selectedConnex!!.my = my
+                                selectedConnex!!.mx = mX
+                                selectedConnex!!.my = mY
                                 img.setImageDrawable(DrawableGraph(this.ga))
                             }
 

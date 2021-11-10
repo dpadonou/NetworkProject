@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class Graph {
-    private  var titre:String = ""
+    private  var titre: String = ""
     private val nodes: ArrayList<Node> = ArrayList()
     private val connexions: ArrayList<Connexion> = ArrayList()
-    private var tmpConnexion:Connexion? = null
+    private var tmpConnexion: Connexion? = null
 
     /** Methode pour recuperer le titre **/
     fun getTitre() : String{
@@ -35,20 +35,21 @@ class Graph {
     }
    /** recupérer un noeud du graphe par la position du centre **/
     fun getNode(x: Float, y: Float): Node? {
-        var no: Node? = null
+        var node: Node? = null
         for (n: Node in nodes) {
             if ((x >= n.getPosX() - 30F && x <= n.getPosX() + 30F) && (y >= n.getPosY() - 30F && y <= n.getPosY() + 30F)) {
-                no = n
+                node = n
             }
         }
-        return no
+        return node
     }
     /** recuprérer une connexion du graphe par la position du milieu **/
     fun getConnexion(x: Float, y: Float): Connexion? {
         var co: Connexion? = null
         for (c:Connexion in connexions) {
                val f = c.getMiddle()
-            if ((x>= c.getMiddle()[0]- 20F && x<= c.getMiddle()[0]+20F) && (y>= c.getMiddle()[1]- 20F && y<= c.getMiddle()[1]+20F) ) {
+            if ((x>= c.getMiddle()[0]- 20F && x<= c.getMiddle()[0]+20F)
+                && (y>= c.getMiddle()[1]- 20F && y<= c.getMiddle()[1]+20F) ) {
                 co = c
             }
         }
@@ -58,8 +59,8 @@ class Graph {
     fun getConnexion(c:Connexion): Connexion? {
         var con:Connexion?  = null
         for (co:Connexion in connexions) {
-            if (co.equals(c)) {
-                con=co
+            if (co == c) {
+                con = co
             }
         }
         return con

@@ -34,8 +34,8 @@ class ConnexionUpdateDialog: Dialog {
                 if(this.ga.deleteConnexion(this.c)){
                     Toast.makeText(this.context,context.getString(R.string.drop_success_text), Toast.LENGTH_LONG).show()
                     dialog.dismiss()
-                    this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    this.m.getImg().invalidate()
+                    this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
                     dialog.dismiss()
@@ -58,7 +58,7 @@ class ConnexionUpdateDialog: Dialog {
                 val valsaisie = input.text.toString()
                 if( input.text!=null){
                     this.c.setetiquette(input.text.toString())
-                    this.m.getimg().invalidate()
+                    this.m.getImg().invalidate()
                     //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
@@ -95,7 +95,7 @@ class ConnexionUpdateDialog: Dialog {
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 if(check != 0){
                     this.ga.getConnexion(c)!!.setcouleur(check)
-                    this.m.getimg().invalidate()
+                    this.m.getImg().invalidate()
                     //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }
@@ -126,7 +126,7 @@ class ConnexionUpdateDialog: Dialog {
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 if(check != 0F){
                     this.c.setEpaisseur(check)
-                    this.m.getimg().invalidate()
+                    this.m.getImg().invalidate()
                    // this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }
