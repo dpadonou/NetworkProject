@@ -34,8 +34,8 @@ class ConnexionUpdateDialog: Dialog {
                 if(this.ga.deleteConnexion(this.c)){
                     Toast.makeText(this.context,"Suppression réussie", Toast.LENGTH_LONG).show()
                     dialog.dismiss()
-                    this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    this.m.getImg().invalidate()
+                    this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
                     dialog.dismiss()
@@ -58,8 +58,8 @@ class ConnexionUpdateDialog: Dialog {
                 val valsaisie = input.text.toString()
                 if( input.text!=null){
                     this.c.setetiquette(input.text.toString())
-                    this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    this.m.getImg().invalidate()
+                    this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
                     Toast.makeText(this.m,"Veuillez entrez un nom pour l'etiquette",Toast.LENGTH_LONG).show()
@@ -81,7 +81,7 @@ class ConnexionUpdateDialog: Dialog {
             alertDialog.setView(dv)
             val rg = dv.findViewById<RadioGroup>(R.id.rgcolor)
             var check:Int = 0
-            rg.setOnCheckedChangeListener { group, checkedId ->
+            rg.setOnCheckedChangeListener { _, checkedId ->
                 when(checkedId){
                     R.id.cyanradio -> check = Color.rgb(0, 255, 255)
                     R.id.redradio -> check = Color.RED
@@ -96,7 +96,7 @@ class ConnexionUpdateDialog: Dialog {
                 if(check != 0){
                     this.c.setcouleur(check)
                     //this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }
                 dialog.dismiss()
@@ -126,8 +126,8 @@ class ConnexionUpdateDialog: Dialog {
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 if(check != 0F){
                     this.c.setEpaisseur(check)
-                    this.m.getimg().invalidate()
-                    this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
+                    this.m.getImg().invalidate()
+                    this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }
                 dialog.dismiss()

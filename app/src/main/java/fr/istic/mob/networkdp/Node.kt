@@ -43,4 +43,28 @@ class Node(private var titre: String) {
     fun setPosY(y: Float) {
         this.posY = y
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Node
+
+        if (titre != other.titre) return false
+        if (posX != other.posX) return false
+        if (posY != other.posY) return false
+        if (couleur != other.couleur) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = titre.hashCode()
+        result = 31 * result + posX.hashCode()
+        result = 31 * result + posY.hashCode()
+        result = 31 * result + couleur
+        return result
+    }
+
+
 }
