@@ -31,7 +31,7 @@ class nodeUpdateDialog : Dialog {
                 if(this.ga.deleteNode(this.n)){
                     Toast.makeText(this.context,context.getString(R.string.drop_success_text), Toast.LENGTH_LONG).show()
                     dialog.dismiss()
-                    this.m.getimg().invalidate()
+                    this.m.getImg().invalidate()
                    // this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
@@ -55,7 +55,7 @@ class nodeUpdateDialog : Dialog {
                 val valsaisie = input.text.toString()
                 if( input.text!=null){
                     this.n.setTitre(input.text.toString())
-                    this.m.getimg().invalidate()
+                    this.m.getImg().invalidate()
                     //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }else{
@@ -92,7 +92,7 @@ class nodeUpdateDialog : Dialog {
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 if(check != 0){
                     this.n.setcouleur(check)
-                    this.m.getimg().invalidate()
+                    this.m.getImg().invalidate()
                     //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }

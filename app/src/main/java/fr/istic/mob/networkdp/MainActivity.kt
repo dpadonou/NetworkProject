@@ -63,14 +63,14 @@ class MainActivity : AppCompatActivity() {
             ga = Json.decodeFromString("$json")
             mode = Json.decodeFromString("$json2")
             //img.background = Json.decodeFromString("$jdo")
-            val d = DrawableGraph(ga)
-            img.setImageDrawable(d)
+            img.setImageDrawable(DrawableGraph(ga))
+            img.invalidate()
             faire(mode)
         }else{
             GraphTitreDialog()
             Toast.makeText(this,resources.getString(R.string.dialoggraph_msg),Toast.LENGTH_LONG).show()
-            val d = DrawableGraph(ga)
-            img.setImageDrawable(d)
+           // val d = DrawableGraph(ga)
+            img.setImageDrawable(DrawableGraph(ga))
         }
 
 
@@ -156,6 +156,7 @@ class MainActivity : AppCompatActivity() {
                 var ntp: Node?
                 lateinit var nfin: Node
                 img.setOnTouchListener { _, event ->
+                    img.parent.requestDisallowInterceptTouchEvent(true)
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
                             downX = event.x
@@ -218,7 +219,6 @@ class MainActivity : AppCompatActivity() {
                                 img.invalidate()
                                // img.setImageDrawable(DrawableGraph(ga))
                             }
-                            false
                         }
                     }
                     true
@@ -258,7 +258,7 @@ class MainActivity : AppCompatActivity() {
                 this.title = sb.toString()
                 var time: Long = 0
                 img.setOnTouchListener { _, event ->
-
+                    img.parent.requestDisallowInterceptTouchEvent(true)
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
                             time = System.currentTimeMillis()
@@ -289,6 +289,7 @@ class MainActivity : AppCompatActivity() {
                 var selectNode: Node? = null
                 var selectedConnex:Connexion? = null
                 img.setOnTouchListener { _, event ->
+                    img.parent.requestDisallowInterceptTouchEvent(true)
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
                             downX = event.x
