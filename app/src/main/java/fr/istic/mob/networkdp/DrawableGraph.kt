@@ -40,17 +40,18 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
                 p.moveTo(i.getEmitter().getPosX(), i.getEmitter().getPosY())
                 if (i.isCurved) {
                     p.quadTo(
-                        (pos[0] + i.mx) / 2,
-                        (pos[1] + i.my) / 2,
+                        (pos[0] + i.mX) / 2,
+                        (pos[1] + i.mY) / 2,
                         i.getReceiver().getPosX(),
                         i.getReceiver().getPosY()
                     )
                     c.drawText(
                         i.getetiquette(),
-                        (pos[0] + i.mx) / 2,
-                        (pos[1] + i.my) / 2,
+                        (pos[0] + i.mX) / 2,
+                        (pos[1] + i.mY) / 2,
                         textPaint
                     )
+                    i.setMiddle((pos[0] + i.mX) / 2,(pos[1] + i.mY) / 2)
                 } else {
                     p.lineTo(i.getReceiver().getPosX(), i.getReceiver().getPosY())
                     textPaint.textAlign = Paint.Align.CENTER

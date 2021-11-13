@@ -10,12 +10,15 @@ class Connexion(private var debut: Node) {
     private var couleur: Int = Color.YELLOW
     private var epaisseur: Float = 20F
     var isCurved: Boolean = false
-    var mx: Float = 0F
-    var my: Float = 0F
+    var mX: Float = 0F
+    var mY: Float = 0F
+    private var middlePosition = FloatArray(2)
 
     constructor(debut: Node, fin: Node) : this(debut) {
         this.debut = debut
         this.fin = fin
+        this.middlePosition[0] = (this.debut.getPosX() + this.fin.getPosX()) / 2
+        this.middlePosition[1] = (this.debut.getPosY() + this.fin.getPosY()) / 2
     }
 
     /**
@@ -64,10 +67,12 @@ class Connexion(private var debut: Node) {
 
     /**Retourne la position du milieu **/
     fun getMiddle(): FloatArray {
-        val c = FloatArray(2)
-        c[0] = (this.debut.getPosX() + this.fin.getPosX()) / 2
-        c[1] = (this.debut.getPosY() + this.fin.getPosY()) / 2
-        return c
+        return this.middlePosition
+    }
+    /**Fournit des positions au milieu **/
+    fun setMiddle(x:Float, y:Float) {
+        this.middlePosition[0] =x
+        this.middlePosition[1] =y
     }
 
     override fun equals(other: Any?): Boolean {
@@ -90,8 +95,8 @@ class Connexion(private var debut: Node) {
         result = 31 * result + couleur
         result = 31 * result + epaisseur.hashCode()
         result = 31 * result + isCurved.hashCode()
-        result = 31 * result + mx.hashCode()
-        result = 31 * result + my.hashCode()
+        result = 31 * result + mX.hashCode()
+        result = 31 * result + mY.hashCode()
         return result
     }
 

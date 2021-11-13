@@ -160,15 +160,19 @@ class MainActivity : AppCompatActivity() {
                 enableReadMode()
             }
             States.RESET -> {
+                img.parent.requestDisallowInterceptTouchEvent(false)
                 reset()
             }
             States.SAVE -> {
+                img.parent.requestDisallowInterceptTouchEvent(false)
                 save()
             }
             States.IMPORT_NETWORK -> {
+                img.parent.requestDisallowInterceptTouchEvent(false)
                 importNetwork()
             }
             States.IMPORT_PLAN -> {
+                img.parent.requestDisallowInterceptTouchEvent(false)
                 importPlan()
             }
             States.SEND_NETWORK -> {
@@ -349,11 +353,10 @@ class MainActivity : AppCompatActivity() {
         this.title = sb.toString()
         var selectNode: Node? = null
         var selectedConnex: Connexion? = null
+        img.parent.requestDisallowInterceptTouchEvent(false)
         img.setOnTouchListener { _, event ->
-            img.parent.requestDisallowInterceptTouchEvent(true)
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    img.parent.requestDisallowInterceptTouchEvent(true)
                     downX = event.x
                     downY = event.y
                     if (ga.getNode(downX, downY) != null) {
@@ -361,7 +364,7 @@ class MainActivity : AppCompatActivity() {
                     } else if (ga.getConnexion(downX, downY) != null) {
                         selectedConnex = ga.getConnexion(downX, downY)
                         //selectedConnex!!.mX = downX
-                        //selectedConnex!!.my = downY
+                        //selectedConnex!!.mY = downY
                     }
                 }
                 MotionEvent.ACTION_UP -> {
@@ -370,6 +373,7 @@ class MainActivity : AppCompatActivity() {
                     img.parent.requestDisallowInterceptTouchEvent(false)
                 }
                 MotionEvent.ACTION_MOVE -> {
+                    img.parent.requestDisallowInterceptTouchEvent(true)
                     mX = event.x
                     mY = event.y
                     if (selectNode != null) {
@@ -380,8 +384,8 @@ class MainActivity : AppCompatActivity() {
                         }
                     } else if (selectedConnex != null) {
                         selectedConnex!!.isCurved = true
-                        selectedConnex!!.mx = mX
-                        selectedConnex!!.my = mY
+                        selectedConnex!!.mX = mX
+                        selectedConnex!!.mY = mY
                         img.invalidate()
                     }
 
@@ -453,6 +457,7 @@ class MainActivity : AppCompatActivity() {
     /**Envoi une capture du graphe par mail **/
     private fun sendNetworkByMail() {
         this.title = resources.getString(R.string.app_name)
+        img.parent.requestDisallowInterceptTouchEvent(false)
         val f = screenshot()
         this.startActivity(f)
     }
@@ -463,6 +468,7 @@ class MainActivity : AppCompatActivity() {
         sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.add_object_text))
         this.title = sb.toString()
         var time: Long = 0
+        img.parent.requestDisallowInterceptTouchEvent(false)
         img.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -497,10 +503,10 @@ class MainActivity : AppCompatActivity() {
         var ndepart: Node? = null
         var ntp: Node?
         lateinit var nfin: Node
+        img.parent.requestDisallowInterceptTouchEvent(false)
         img.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    img.parent.requestDisallowInterceptTouchEvent(true)
                     downX = event.x
                     downY = event.y
                     ndepart = ga.getNode(downX, downY)
@@ -554,6 +560,7 @@ class MainActivity : AppCompatActivity() {
                     img.parent.requestDisallowInterceptTouchEvent(false)
                 }
                 MotionEvent.ACTION_MOVE -> {
+                    img.parent.requestDisallowInterceptTouchEvent(true)
                     mX = event.x
                     mY = event.y
                     ntp = Node(mX, mY, "")
@@ -575,6 +582,7 @@ class MainActivity : AppCompatActivity() {
         sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.update))
         this.title = sb.toString()
         var time: Long = 0
+        img.parent.requestDisallowInterceptTouchEvent(false)
         img.setOnTouchListener { _, event ->
             img.parent.requestDisallowInterceptTouchEvent(true)
             when (event.action) {
