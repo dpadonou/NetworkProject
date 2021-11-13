@@ -12,8 +12,7 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 
-class NodeUpdateDialog(m: MainActivity, private var ga: Graph, private var n: Node) : Dialog(m) {
-    private lateinit var m: MainActivity
+class NodeUpdateDialog(private var m: MainActivity, private var ga: Graph, private var n: Node) : Dialog(m) {
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
