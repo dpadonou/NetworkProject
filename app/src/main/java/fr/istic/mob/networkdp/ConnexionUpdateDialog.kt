@@ -12,15 +12,8 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 
-class ConnexionUpdateDialog: Dialog {
-    private lateinit var ga:Graph
-    private lateinit var c:Connexion
-    private lateinit var m:MainActivity
-    constructor(m:MainActivity,ga:Graph,c:Connexion) : super(m) {
-        this.m = m
-        this.ga = ga
-        this.c = c
-    }
+class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph, private var c: Connexion) : Dialog(m) {
+
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +24,17 @@ class ConnexionUpdateDialog: Dialog {
             alertDialog.setTitle(this.context.getString(R.string.confirm_text))
             alertDialog.setMessage(context.getString(R.string.confirm_drop_connexion))
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
-                if(this.ga.deleteConnexion(this.c)){
-                    Toast.makeText(this.context,context.getString(R.string.drop_success_text), Toast.LENGTH_LONG).show()
+                if (this.ga.deleteConnexion(this.c)) {
+                    Toast.makeText(
+                        this.context,
+                        context.getString(R.string.drop_success_text),
+                        Toast.LENGTH_LONG
+                    ).show()
                     dialog.dismiss()
                     this.m.getImg().invalidate()
                     this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
-                }else{
+                } else {
                     dialog.dismiss()
                 }
             }
@@ -55,14 +52,17 @@ class ConnexionUpdateDialog: Dialog {
             alertDialog.setView(input)
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 //methode du bouton Valider
-                val valsaisie = input.text.toString()
-                if( input.text!=null){
+                input.text.toString()
+                if (input.text != null) {
                     this.c.setetiquette(input.text.toString())
                     this.m.getImg().invalidate()
-                    //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
-                }else{
-                    Toast.makeText(this.m,context.getString(R.string.etiquette_forget_text),Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(
+                        this.m,
+                        context.getString(R.string.etiquette_forget_text),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 dialog.dismiss()
             }
@@ -80,20 +80,20 @@ class ConnexionUpdateDialog: Dialog {
             val dv: View = inflater.inflate(R.layout.layout_color_node, null)
             alertDialog.setView(dv)
             val rg = dv.findViewById<RadioGroup>(R.id.rgcolor)
-            var check:Int = 0
-            rg.setOnCheckedChangeListener { group, checkedId ->
-                when(checkedId){
+            var check = 0
+            rg.setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
                     R.id.cyanradio -> check = Color.rgb(0, 255, 255)
                     R.id.redradio -> check = Color.RED
                     R.id.greenradio -> check = Color.GREEN
                     R.id.blueradio -> check = Color.BLUE
                     R.id.orangeradio -> check = Color.rgb(255, 165, 0)
-                    R.id.magentaradio -> check= Color.rgb(255, 0, 255)
-                    R.id.noirradio -> check= Color.BLACK
+                    R.id.magentaradio -> check = Color.rgb(255, 0, 255)
+                    R.id.noirradio -> check = Color.BLACK
                 }
             }
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
-                if(check != 0){
+                if (check != 0) {
                     this.ga.getConnexion(c)!!.setcouleur(check)
                     this.m.getImg().invalidate()
                     //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
@@ -115,19 +115,18 @@ class ConnexionUpdateDialog: Dialog {
             val dv: View = inflater.inflate(R.layout.layout_connexion_width, null)
             alertDialog.setView(dv)
             val rg2 = dv.findViewById<RadioGroup>(R.id.rgWidth)
-            var check:Float = 0F
-            rg2.setOnCheckedChangeListener { group, checkedId ->
-                when(checkedId){
-                    R.id.btn_connex_small -> check=10F
-                    R.id.btn_connex_medium -> check=20F
-                    R.id.btn_connex_large -> check=40F
+            var check = 0F
+            rg2.setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
+                    R.id.btn_connex_small -> check = 10F
+                    R.id.btn_connex_medium -> check = 20F
+                    R.id.btn_connex_large -> check = 40F
                 }
             }
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
-                if(check != 0F){
+                if (check != 0F) {
                     this.c.setEpaisseur(check)
                     this.m.getImg().invalidate()
-                   // this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }
                 dialog.dismiss()

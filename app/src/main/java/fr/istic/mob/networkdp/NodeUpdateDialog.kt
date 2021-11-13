@@ -7,17 +7,14 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioGroup
+import android.widget.Toast
 
-class nodeUpdateDialog : Dialog {
-    private lateinit var ga:Graph
-    private lateinit var n:Node
-    private lateinit var m:MainActivity
-    constructor(m:MainActivity,ga:Graph,n:Node) : super(m) {
-        this.m = m
-        this.ga = ga
-        this.n = n
-    }
+class NodeUpdateDialog(m: MainActivity, private var ga: Graph, private var n: Node) : Dialog(m) {
+    private lateinit var m: MainActivity
+
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +25,16 @@ class nodeUpdateDialog : Dialog {
             alertDialog.setTitle(context.getString(R.string.confirm_text))
             alertDialog.setMessage(context.getString(R.string.confim_drop_node))
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
-                if(this.ga.deleteNode(this.n)){
-                    Toast.makeText(this.context,context.getString(R.string.drop_success_text), Toast.LENGTH_LONG).show()
+                if (this.ga.deleteNode(this.n)) {
+                    Toast.makeText(
+                        this.context,
+                        context.getString(R.string.drop_success_text),
+                        Toast.LENGTH_LONG
+                    ).show()
                     dialog.dismiss()
                     this.m.getImg().invalidate()
-                   // this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
-                }else{
+                } else {
                     dialog.dismiss()
                 }
             }
@@ -43,6 +43,7 @@ class nodeUpdateDialog : Dialog {
             }
             alertDialog.show()
         }
+
         /** Modifier l'etiquette du noeud **/
         findViewById<Button>(R.id.btn_connex_etiq_update).setOnClickListener {
             val alertDialog = AlertDialog.Builder(this.m)
@@ -52,14 +53,16 @@ class nodeUpdateDialog : Dialog {
             alertDialog.setView(input)
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
                 //methode du bouton Valider
-                val valsaisie = input.text.toString()
-                if( input.text!=null){
+                if (input.text != null && input.text.toString() != "") {
                     this.n.setTitre(input.text.toString())
                     this.m.getImg().invalidate()
-                    //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
-                }else{
-                    Toast.makeText(this.m,context.getString(R.string.node_etiquette_modify),Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(
+                        this.m,
+                        context.getString(R.string.node_etiquette_modify),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 dialog.dismiss()
             }
@@ -68,36 +71,38 @@ class nodeUpdateDialog : Dialog {
             }
             alertDialog.show()
         }
+
         /** modifiez la couleur **/
         findViewById<Button>(R.id.btn_modify_connexColor).setOnClickListener {
             val alertDialog = AlertDialog.Builder(this.m)
             alertDialog.setTitle(context.getString(R.string.node_color_title))
             alertDialog.setMessage(context.getString(R.string.color_text))
-             val inflater:LayoutInflater = this.layoutInflater
+            val inflater: LayoutInflater = this.layoutInflater
             val dv: View = inflater.inflate(R.layout.layout_color_node, null)
             alertDialog.setView(dv)
             val rg = dv.findViewById<RadioGroup>(R.id.rgcolor)
-            var check:Int = 0
-            rg.setOnCheckedChangeListener { group, checkedId ->
-                when(checkedId){
+            var check = 0
+            rg.setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
                     R.id.cyanradio -> check = Color.rgb(0, 255, 255)
                     R.id.redradio -> check = Color.RED
                     R.id.greenradio -> check = Color.GREEN
                     R.id.blueradio -> check = Color.BLUE
                     R.id.orangeradio -> check = Color.rgb(255, 165, 0)
-                    R.id.magentaradio -> check= Color.rgb(255, 0, 255)
-                    R.id.noirradio -> check=Color.BLACK
+                    R.id.magentaradio -> check = Color.rgb(255, 0, 255)
+                    R.id.noirradio -> check = Color.BLACK
                 }
             }
+
             alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
-                if(check != 0){
+                if (check != 0) {
                     this.n.setcouleur(check)
                     this.m.getImg().invalidate()
-                    //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                     this.dismiss()
                 }
                 dialog.dismiss()
             }
+
             alertDialog.setNegativeButton(this.m.resources.getString(R.string.annuler_text)) { dialog, _ ->
                 dialog.dismiss()
             }
