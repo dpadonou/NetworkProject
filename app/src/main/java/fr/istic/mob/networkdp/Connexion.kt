@@ -1,7 +1,13 @@
 package fr.istic.mob.networkdp
 
 import android.graphics.Color
+import android.graphics.Path
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import android.graphics.PathMeasure
+
+
+
 
 @Serializable
 class Connexion(private var debut: Node) {
@@ -9,16 +15,18 @@ class Connexion(private var debut: Node) {
     private var etiquette: String = ""
     private var couleur: Int = Color.YELLOW
     private var epaisseur: Float = 20F
+    private var middlePosition = FloatArray(2)
     var isCurved: Boolean = false
     var mX: Float = 0F
     var mY: Float = 0F
-    private var middlePosition = FloatArray(2)
+    @Contextual
+    private var myPath:Path = Path()
 
     constructor(debut: Node, fin: Node) : this(debut) {
         this.debut = debut
         this.fin = fin
-        this.middlePosition[0] = (this.debut.getPosX() + this.fin.getPosX()) / 2
-        this.middlePosition[1] = (this.debut.getPosY() + this.fin.getPosY()) / 2
+        myPath.moveTo(this.debut.getPosX(), this.debut.getPosX())
+        myPath.lineTo(fin.getPosX(),fin.getPosY())
     }
 
     /**
@@ -64,6 +72,22 @@ class Connexion(private var debut: Node) {
     fun setEpaisseur(f: Float) {
         this.epaisseur = f
     }
+    /** getters du path de la connexion **/
+    fun getPath():Path{
+        if(isCurved){
+            myPath = Path()
+            myPath.moveTo(this.debut.getPosX(), this.debut.getPosX())
+            myPath.quadTo(
+                (middlePosition[0] + mX) / 2,
+                (middlePosition[1] + mY) / 2,
+                fin.getPosX(),
+                fin.getPosY()
+            )
+
+        }
+        calculMiddle(myPath)
+        return myPath
+    }
 
     /**Retourne la position du milieu **/
     fun getMiddle(): FloatArray {
@@ -73,6 +97,12 @@ class Connexion(private var debut: Node) {
     fun setMiddle(x:Float, y:Float) {
         this.middlePosition[0] =x
         this.middlePosition[1] =y
+    }
+
+    private fun calculMiddle(p:Path){
+        val pm = PathMeasure(myPath, false)
+        //get coordinates of the middle point
+        pm.getPosTan(pm.length * 0.5f, middlePosition, null)
     }
 
     override fun equals(other: Any?): Boolean {

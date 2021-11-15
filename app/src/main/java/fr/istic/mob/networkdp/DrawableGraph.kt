@@ -7,9 +7,14 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     private var c: Canvas = Canvas()
     private val textPaint = Paint(Paint.LINEAR_TEXT_FLAG)
     private val rectPaint = Paint(Paint.LINEAR_TEXT_FLAG)
+    private val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pathtempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
 
     init {
         rectPaint.style = Paint.Style.FILL
+        pathPaint.style = Paint.Style.STROKE
+        pathtempPaint.style = Paint.Style.STROKE
         textPaint.color = Color.BLACK
         textPaint.textSize = 40F
     }
@@ -29,12 +34,14 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
 
     /** Dessine les connexions du graphe **/
     private fun drawConnexions(n: ArrayList<Connexion>) {
-        val p = Path()
+        //val p = Path()
         if (n.isNotEmpty()) {
             for (i in n) {
-                val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-                pathPaint.style = Paint.Style.STROKE
                 pathPaint.strokeWidth = i.getEpaisseur()
+                pathPaint.color = i.getcouleur()
+                c.drawPath(i.getPath(), pathPaint)
+                c.drawText(i.getetiquette(), i.getMiddle()[0], i.getMiddle()[1], textPaint)
+                /*pathPaint.strokeWidth = i.getEpaisseur()
                 pathPaint.color = i.getcouleur()
                 val pos: FloatArray = i.getMiddle()
                 p.moveTo(i.getEmitter().getPosX(), i.getEmitter().getPosY())
@@ -54,10 +61,10 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
                     i.setMiddle((pos[0] + i.mX) / 2,(pos[1] + i.mY) / 2)
                 } else {
                     p.lineTo(i.getReceiver().getPosX(), i.getReceiver().getPosY())
-                    textPaint.textAlign = Paint.Align.CENTER
+                    //textPaint.textAlign = Paint.Align.CENTER
                     c.drawText(i.getetiquette(), pos[0], pos[1], textPaint)
                 }
-                c.drawPath(p, pathPaint)
+                c.drawPath(p, pathPaint)*/
             }
         }
     }
@@ -65,8 +72,6 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     /** dessine la connexion temporaire **/
     private fun drawTempConnexion(tempConnexion: Connexion?) {
         val p = Path()
-        val pathtempPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        pathtempPaint.style = Paint.Style.STROKE
         if (tempConnexion != null) {
             pathtempPaint.strokeWidth = tempConnexion.getEpaisseur()
             pathtempPaint.color = tempConnexion.getcouleur()

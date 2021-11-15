@@ -60,18 +60,15 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             val json = savedInstanceState.getSerializable("graph")
             val json2 = savedInstanceState.getSerializable("mode")
-            // val jdo = savedInstanceState.getSerializable("drawable")
             ga = Json.decodeFromString("$json")
             mode = Json.decodeFromString("$json2")
-            //img.background = Json.decodeFromString("$jdo")
             (resources.getString(R.string.graph_name_text) + " " + ga.getTitre()).also { graphTitre.text = it }
             img.setImageDrawable(DrawableGraph(ga))
             img.invalidate()
             effectuerMode(mode)
-        } else {
+        }else{
             graphTitreDialog()
             Toast.makeText(this,resources.getString(R.string.dialoggraph_msg),Toast.LENGTH_LONG).show()
-            // val d = DrawableGraph(ga)
             img.setImageDrawable(DrawableGraph(ga))
         }
     }
@@ -225,6 +222,7 @@ class MainActivity : AppCompatActivity() {
             graphTitreDialog()
         } else {
             val alertDialog = AlertDialog.Builder(this@MainActivity)
+            alertDialog.setCancelable(false)
             val input = EditText(this@MainActivity)
             alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
             alertDialog.setMessage(resources.getString(R.string.dialognode_text))
@@ -256,6 +254,7 @@ class MainActivity : AppCompatActivity() {
     /** Boite de dialogue pour recuperer le titre du graphe  */
     private fun graphTitreDialog() {
         val alertDialog = AlertDialog.Builder(this@MainActivity)
+        alertDialog.setCancelable(false)
         val input = EditText(this@MainActivity)
         alertDialog.setTitle(resources.getString(R.string.graph_title))
         alertDialog.setMessage(resources.getString(R.string.dialoggraph_text))
@@ -417,6 +416,7 @@ class MainActivity : AppCompatActivity() {
     private fun importNetwork() {
         this.title = resources.getString(R.string.app_name)
         val alertDialog = AlertDialog.Builder(this@MainActivity)
+       alertDialog.setCancelable(false)
         val input = EditText(this@MainActivity)
         alertDialog.setTitle(resources.getString(R.string.graph_title))
         alertDialog.setMessage(resources.getString(R.string.dialoggraph_text))
@@ -503,7 +503,7 @@ class MainActivity : AppCompatActivity() {
         var ndepart: Node? = null
         var ntp: Node?
         lateinit var nfin: Node
-        img.parent.requestDisallowInterceptTouchEvent(false)
+        //img.parent.requestDisallowInterceptTouchEvent(false)
         img.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -511,6 +511,7 @@ class MainActivity : AppCompatActivity() {
                     downY = event.y
                     ndepart = ga.getNode(downX, downY)
                     Log.i("", "Down : ${ndepart.toString()}")
+                    false
                 }
                 MotionEvent.ACTION_UP -> {
                     upX = event.x
@@ -522,29 +523,7 @@ class MainActivity : AppCompatActivity() {
                             val c = Connexion(ndepart!!, nfin)
                             val cbis = Connexion(nfin, ndepart!!)
                             if(ga.getConnexion(c) == null && ga.getConnexion(cbis) == null){
-                                val alertDialog = AlertDialog.Builder(this@MainActivity)
-                                val input = EditText(this@MainActivity)
-                                alertDialog.setTitle(resources.getString(R.string.connexion_label_text))
-                                alertDialog.setMessage(resources.getString(R.string.connexion_label))
-                                alertDialog.setView(input)
-                                alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-                                    //methode du bouton Valider
-                                    val valsaisie = input.text.toString()
-                                    if(valsaisie != ""){
-                                        c.setetiquette(valsaisie)
-                                        ga.addConnexion(c)
-                                        ga.settmpConnexion(null)
-                                        img.invalidate()
-                                        dialog.dismiss()
-                                    }else{
-                                        Toast.makeText(this,resources.getString(R.string.etiquette_forget_text),Toast.LENGTH_LONG).show()
-                                    }
-
-                                }
-                                alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-                                    dialog.dismiss()
-                                }
-                                alertDialog.show()
+                                  createConnectionDialog(c)
                             }else{
                                 Toast.makeText(this,getString(R.string.connexion_creation_error),Toast.LENGTH_LONG).show()
                             }
@@ -557,23 +536,54 @@ class MainActivity : AppCompatActivity() {
                         ga.settmpConnexion(null)
                         img.invalidate()
                     }
-                    img.parent.requestDisallowInterceptTouchEvent(false)
+                    //img.parent.requestDisallowInterceptTouchEvent(false)
+                    true
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    img.parent.requestDisallowInterceptTouchEvent(true)
+                   // img.parent.requestDisallowInterceptTouchEvent(true)
                     mX = event.x
                     mY = event.y
                     ntp = Node(mX, mY, "")
                     if (ndepart != null) {
                         ga.settmpConnexion(Connexion(ndepart!!, ntp!!))
                         img.invalidate()
-                        // img.setImageDrawable(DrawableGraph(ga))
                     }
+                    false
                 }
             }
-            true
+            false
         }
 
+    }
+
+    /** Affiche une dialogue pour saisir le nom de la connexion
+     * Crée la connexion une fois son etiquette validée
+     **/
+    private fun createConnectionDialog(connexion:Connexion) {
+        val alertDialog = AlertDialog.Builder(this@MainActivity)
+        alertDialog.setCancelable(false)
+        val input = EditText(this@MainActivity)
+        alertDialog.setTitle(resources.getString(R.string.connexion_label_text))
+        alertDialog.setMessage(resources.getString(R.string.connexion_label))
+        alertDialog.setView(input)
+        alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
+            //methode du bouton Valider
+            val valsaisie = input.text.toString()
+            if(valsaisie != ""){
+                connexion.setetiquette(valsaisie)
+                ga.addConnexion(connexion)
+                ga.settmpConnexion(null)
+                img.invalidate()
+                dialog.dismiss()
+            }else{
+                Toast.makeText(this,resources.getString(R.string.etiquette_forget_text),Toast.LENGTH_LONG).show()
+            }
+
+        }
+        alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
     }
 
     /**Modifie soit les connexions, soit les noeuds du graphe **/

@@ -67,7 +67,9 @@ class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph
      **/
     private fun updateConnectionLabel(connexion:Connexion){
         val alertDialog = AlertDialog.Builder(this.m)
+        alertDialog.setCancelable(false)
         val input = EditText(this.m)
+        //input.text = connexion.getetiquette()
         alertDialog.setTitle(context.getString(R.string.connexion_label_text))
         alertDialog.setMessage(context.getString(R.string.connexion_label))
         alertDialog.setView(input)
