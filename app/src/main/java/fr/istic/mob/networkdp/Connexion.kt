@@ -26,21 +26,27 @@ class Connexion(private var debut: Node) {
     }
 
     /**
-     * getters pour le noeud de depart de la connexion
+     * getters et setters pour le noeud de depart de la connexion
      */
     fun getEmitter(): Node {
         return this.debut
     }
+    fun setEmitter(node:Node) {
+        this.debut = node
+    }
 
     /**
-     * getters pour le noeud de fin de la connexion
+     * getters et setters pour le noeud de fin de la connexion
      */
     fun getReceiver(): Node {
         return this.fin
     }
+    fun setReceiver(node:Node) {
+        this.fin = node
+    }
 
     /**
-     * getters and setters pour l'etiquette de la connexion
+     * getters et setters pour l'etiquette de la connexion
      */
     fun getetiquette(): String {
         return this.etiquette
@@ -92,15 +98,9 @@ class Connexion(private var debut: Node) {
     fun getMiddle(): FloatArray {
         return this.middlePosition
     }
-    /**Fournit des positions au milieu **/
-    fun setMiddle(x:Float, y:Float) {
-        this.middlePosition[0] =x
-        this.middlePosition[1] =y
-    }
 
     private fun calculMiddle(p:Path){
         val pm = PathMeasure(myPath, false)
-        //get coordinates of the middle point
         pm.getPosTan(pm.length * 0.5f, middlePosition, null)
     }
 

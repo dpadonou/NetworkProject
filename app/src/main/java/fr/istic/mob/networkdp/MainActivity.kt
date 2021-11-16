@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
             ga = Json.decodeFromString("$json")
             mode = Json.decodeFromString("$json2")
             (resources.getString(R.string.graph_name_text) + " " + ga.getTitre()).also { graphTitre.text = it }
+            remakeGraph(ga)
             img.setImageDrawable(DrawableGraph(ga))
             img.invalidate()
             effectuerMode(mode)
@@ -257,7 +258,7 @@ class MainActivity : AppCompatActivity() {
         alertDialog.setCancelable(false)
         val input = EditText(this@MainActivity)
         alertDialog.setTitle(resources.getString(R.string.graph_title))
-        alertDialog.setMessage(resources.getString(R.string.dialoggraph_text))
+        alertDialog.setMessage(resources.getString(R.string.dialoggraph_msg)+"\n"+ resources.getString(R.string.dialoggraph_text))
         alertDialog.setView(input)
         alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
             if (input.text != null) {
@@ -352,7 +353,7 @@ class MainActivity : AppCompatActivity() {
         this.title = sb.toString()
         var selectNode: Node? = null
         var selectedConnex: Connexion? = null
-        img.parent.requestDisallowInterceptTouchEvent(false)
+        //img.parent.requestDisallowInterceptTouchEvent(false)
         img.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -369,7 +370,7 @@ class MainActivity : AppCompatActivity() {
                 MotionEvent.ACTION_UP -> {
                     selectNode = null
                     selectedConnex = null
-                    img.parent.requestDisallowInterceptTouchEvent(false)
+                   img.parent.requestDisallowInterceptTouchEvent(false)
                 }
                 MotionEvent.ACTION_MOVE -> {
                     img.parent.requestDisallowInterceptTouchEvent(true)
@@ -425,6 +426,7 @@ class MainActivity : AppCompatActivity() {
             if (input.text != null) {
                 try {
                     ga = gettofile(input.text.toString())!!
+                    remakeGraph(ga)
                     img.invalidate()
                     img.setImageDrawable(DrawableGraph(ga))
                     Toast.makeText(this, getString(R.string.import_success), Toast.LENGTH_LONG)
@@ -589,9 +591,9 @@ class MainActivity : AppCompatActivity() {
         sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.update))
         this.title = sb.toString()
         var time: Long = 0
-        img.parent.requestDisallowInterceptTouchEvent(false)
+       // img.parent.requestDisallowInterceptTouchEvent(false)
         img.setOnTouchListener { _, event ->
-            img.parent.requestDisallowInterceptTouchEvent(true)
+            //img.parent.requestDisallowInterceptTouchEvent(true)
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     time = System.currentTimeMillis()
@@ -628,5 +630,18 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
+    private fun remakeGraph(graph:Graph){
+        if(graph.getConnexionList().isNotEmpty()){
+            for(connexion in graph.getConnexionList()){
+                for(node in graph.getNodeList()){
+                    if(connexion.getEmitter().getPosX() == node.getPosX() && connexion.getEmitter().getPosY() == node.getPosY()){
+                       connexion.setEmitter(node)
+                    }else if(connexion.getReceiver().getPosX() == node.getPosX() && connexion.getReceiver().getPosY() == node.getPosY()){
+                        connexion.setReceiver(node)
+                    }
+                }
+            }
+        }
+    }
 
 }
