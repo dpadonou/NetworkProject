@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -32,44 +33,49 @@ class MainActivity : AppCompatActivity() {
     private var downY: Float = 0F
     private var upX: Float = 0F
     private var upY: Float = 0F
-    private var mx: Float = 0F
-    private var my: Float = 0F
+    private var mX: Float = 0F
+    private var mY: Float = 0F
     private var imgHeight: Float = 0F
     private var imgWidth: Float = 0F
     private val pickImage = 100
     private var imageUri: Uri? = null
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         graphTitre = findViewById(R.id.graphTitre)
         img = findViewById(R.id.imageView)
+        img.background = getDrawable(R.drawable.plan_)
         ga = Graph()
 
         img.viewTreeObserver.addOnGlobalLayoutListener {
             imgWidth = img.measuredWidth.toFloat()
             imgHeight = img.measuredHeight.toFloat()
         }
-
+        initAfterRotation(savedInstanceState)
+    }
+    /** Initialise l'application en cas de rotation de l'ecran **/
+    private fun initAfterRotation(savedInstanceState: Bundle?){
         if (savedInstanceState != null) {
             val json = savedInstanceState.getSerializable("graph")
             val json2 = savedInstanceState.getSerializable("mode")
             ga = Json.decodeFromString("$json")
             mode = Json.decodeFromString("$json2")
+            (resources.getString(R.string.graph_name_text) + " " + ga.getTitre()).also { graphTitre.text = it }
+            remakeGraph(ga)
+            img.setImageDrawable(DrawableGraph(ga))
             img.invalidate()
-            val d = DrawableGraph(ga)
-            img.setImageDrawable(d)
-            faire(mode)
-        } else {
+            effectuerMode(mode)
+        }else{
             graphTitreDialog()
-            Toast.makeText(this, resources.getString(R.string.dialoggraph_msg), Toast.LENGTH_LONG)
-                .show()
-            val d = DrawableGraph(ga)
-            img.setImageDrawable(d)
+            Toast.makeText(this,resources.getString(R.string.dialoggraph_msg),Toast.LENGTH_LONG).show()
+            img.setImageDrawable(DrawableGraph(ga))
         }
     }
 
-    fun getImg(): ImageView {
+    /** Retourne une instance de l'ImageView **/
+     fun getImg(): ImageView {
         return this.img
     }
 
@@ -90,302 +96,54 @@ class MainActivity : AppCompatActivity() {
             //Lorsqu'on clique sur ajouter objet
             R.id.add_object -> {
                 mode = States.ADDING_NODE
-                addNode()
+                effectuerMode(mode)
             }
             //Lorsqu'on clique sur Modifier objet
             R.id.reading_mode -> {
                 mode = States.READING_MODE
-                enableReading()
+                effectuerMode(mode)
             }
             //Lorsqu'on clique sur ajouter Connexion
             R.id.add_connect -> {
                 mode = States.ADDING_CONNEXION
-                addConnexion()
+                effectuerMode(mode)
             }
             //Lorsqu'on clique sur modifier connexion
             R.id.update -> {
                 mode = States.UPDATE_MODE
-                enableUpdate()
+                effectuerMode(mode)
             }
             //Lorsqu'on clique sur renitialiser le graphe
             R.id.reset -> {
                 mode = States.RESET
-                reset()
+                effectuerMode(mode)
             }
             //Lorsqu'on clique sur Sauvegarder le graphe
             R.id.save -> {
                 mode = States.SAVE
-                save()
+                effectuerMode(mode)
             }
             //Lorsqu'on clique sur importer un graphe
             R.id.import_graph -> {
                 mode = States.IMPORT_NETWORK
-                importNetwork()
+                effectuerMode(mode)
             }
             //Lorsqu'on clique sur importer de nouveau plan
             R.id.import_plan -> {
                 mode = States.IMPORT_PLAN
-                importPlan()
+                effectuerMode(mode)
             }
             //Lorsqu'on clique sur envoyer la capture du graphe
             R.id.send_network -> {
                 mode = States.SEND_NETWORK
-                send()
+                effectuerMode(mode)
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun addConnexion() {
-        val sb = StringBuilder()
-        sb.append(resources.getString(R.string.app_name)).append(" - " + resources.getString(R.string.add_connect_text))
-        this.title = sb.toString()
-        var ndepart: Node? = null
-        var ntp: Node?
-        lateinit var nfin: Node
-        img.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    downX = event.x
-                    downY = event.y
-                    ndepart = ga.getNode(downX, downY)
-                    Log.i("", "Down : ${ndepart.toString()}")
-                }
-                MotionEvent.ACTION_UP -> {
-                    upX = event.x
-                    upY = event.y
-                    ga.settmpConnexion(null)
-                    img.invalidate()
-                    //img.setImageDrawable(DrawableGraph(ga))
-                    val nfintp: Node? = ga.getNode(upX, upY)
-                    if (nfintp != null && ndepart != null && nfintp != ndepart!!) {
-                        nfin = nfintp
-                        val c = Connexion(ndepart!!, nfin)
-                        val cbis = Connexion(nfin, ndepart!!)
-                        if (ga.getConnexion(c) == null && ga.getConnexion(cbis) == null) {
-                            val alertDialog = AlertDialog.Builder(this@MainActivity)
-                            val input = EditText(this@MainActivity)
-                            alertDialog.setTitle("Etiquette de la connexion")
-                            alertDialog.setMessage("Entrez le nom de l'etiquette")
-                            alertDialog.setView(input)
-                            alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-                                //methode du bouton Valider
-                                val valsaisie = input.text.toString()
-                                if (valsaisie != "") {
-                                    c.setetiquette(valsaisie)
-                                    ga.addConnexion(c)
-                                    img.setImageDrawable(DrawableGraph(ga))
-                                    dialog.dismiss()
-                                } else {
-                                    Toast.makeText(
-                                        this,
-                                        "Veuillez entrez un nom pour l'etiquette",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-
-                            }
-                            alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-                                dialog.dismiss()
-                            }
-                            alertDialog.show()
-                        } else {
-                            Toast.makeText(
-                                this,
-                                "Impossible de créer plusieurs connexions entre deux noeuds",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    mx = event.x
-                    my = event.y
-                    ntp = Node(mx, my, "")
-                    if (ndepart != null) {
-                        ga.settmpConnexion(Connexion(ndepart!!, ntp!!))
-                        img.invalidate()
-                        // img.setImageDrawable(DrawableGraph(ga))
-                    }
-                }
-            }
-            true
-        }
-    }
-
-    private fun addNode() {
-        val sb = StringBuilder()
-        sb.append(resources.getString(R.string.app_name)).append(" - " + resources.getString(R.string.add_object_text))
-        this.title = sb.toString()
-        var time: Long = 0
-        img.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    time = System.currentTimeMillis()
-                }
-                MotionEvent.ACTION_UP -> {
-                    val time1 = System.currentTimeMillis() - time
-                    if (time1 >= ViewConfiguration.getLongPressTimeout()) {
-                        xP = event.x
-                        yP = event.y
-                        if ((xP >= 30F && xP <= imgWidth - 30F) && (yP >= 30F && yP <= imgHeight - 30F)) {
-                            //Création de la boite de dialogue et de ses actions
-                            createNodeDialog()
-                        } else {
-                            Toast.makeText(this, "restez dans le cadre", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
-            }
-            true
-        }
-    }
-
-    private fun enableUpdate() {
-        val sb = StringBuilder()
-        sb.append(resources.getString(R.string.app_name))
-            .append(" - " + resources.getString(R.string.update))
-        this.title = sb.toString()
-        var time: Long = 0
-        img.setOnTouchListener { _, event ->
-
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    time = System.currentTimeMillis()
-                }
-                MotionEvent.ACTION_UP -> {
-                    val time1 = System.currentTimeMillis() - time
-                    if (time1 >= ViewConfiguration.getLongPressTimeout()) {
-                        xP = event.x
-                        yP = event.y
-                        Log.i("", "yes")
-                        if (ga.getNode(xP, yP) != null) {
-                            val d = nodeUpdateDialog(this, this.ga, ga.getNode(xP, yP)!!)
-                            d.show()
-                        } else if (ga.getConnexion(xP, yP) != null) {
-                            val cd = ConnexionUpdateDialog(
-                                this,
-                                this.ga,
-                                ga.getConnexion(xP, yP)!!
-                            )
-                            cd.show()
-                        }
-                    }
-                }
-            }
-            true
-        }
-    }
-
-    private fun enableReading() {
-        val sb = StringBuilder()
-        sb.append(resources.getString(R.string.app_name))
-            .append(" - " + resources.getString(R.string.reading_text))
-        this.title = sb.toString()
-        var selectNode: Node? = null
-        var selectedConnex: Connexion? = null
-        img.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    downX = event.x
-                    downY = event.y
-                    if (ga.getNode(downX, downY) != null) {
-                        selectNode = ga.getNode(downX, downY)
-                    } else if (ga.getConnexion(downX, downY) != null) {
-                        selectedConnex = ga.getConnexion(downX, downY)
-                        //selectedConnex!!.mx = downX
-                        //selectedConnex!!.my = downY
-                    }
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    mx = event.x
-                    my = event.y
-                    if (selectNode != null) {
-                        if ((mx >= 30F && mx <= imgWidth - 30F) && (my >= 30F && my <= imgHeight - 30F)) {
-                            selectNode!!.setPosY(my)
-                            selectNode!!.setPosX(mx)
-                            img.invalidate()
-                        }
-                    } else if (selectedConnex != null) {
-                        //Log.i("","Let's go")
-                        selectedConnex!!.isCurved = true
-                        selectedConnex!!.mx = mx
-                        selectedConnex!!.my = my
-                        this.ga.setselectedConnexion(selectedConnex)
-                        img.setImageDrawable(DrawableGraph(this.ga))
-                        //selectedConnex!!.mx = mx
-                        //selectedConnex!!.my = my
-                        // img.invalidate()
-                    }
-
-                }
-            }
-            true
-        }
-    }
-
-    private fun reset() {
-        this.title = resources.getString(R.string.app_name)
-        ga.reset()
-        img.setImageDrawable(DrawableGraph(ga))
-    }
-
-    private fun save() {
-        this.title = resources.getString(R.string.app_name)
-        if (ga.getTitre() != "") {
-            saveintofile(ga.getTitre())
-            Toast.makeText(
-                this,
-                resources.getString(R.string.dialoggraph_msg),
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-
-    private fun importNetwork() {
-        this.title = resources.getString(R.string.app_name)
-        val alertDialog = AlertDialog.Builder(this@MainActivity)
-        val input = EditText(this@MainActivity)
-        alertDialog.setTitle(resources.getString(R.string.graph_title))
-        alertDialog.setMessage(resources.getString(R.string.dialoggraph_text))
-        alertDialog.setView(input)
-        alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-            if (input.text != null) {
-                try {
-                    ga = gettofile(input.text.toString())!!
-                    img.invalidate()
-                    img.setImageDrawable(DrawableGraph(ga))
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    Toast.makeText(
-                        this,
-                        resources.getString(R.string.import_graph_msg),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                dialog.dismiss()
-
-            }
-        }
-        alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-            dialog.dismiss()
-        }
-        alertDialog.show()
-    }
-
-    private fun importPlan() {
-        this.title = resources.getString(R.string.app_name)
-        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        startActivityForResult(gallery, pickImage)
-    }
-
-    private fun send() {
-        this.title = resources.getString(R.string.app_name)
-        screenshot()
-    }
-
     /** Gerer les modes **/
-    private fun faire(m: States) {
+    private fun effectuerMode(m: States) {
         when (m) {
             States.ADDING_CONNEXION -> {
                 addConnexion()
@@ -397,53 +155,48 @@ class MainActivity : AppCompatActivity() {
                 enableUpdate()
             }
             States.READING_MODE -> {
-                enableReading()
+                enableReadMode()
             }
             States.RESET -> {
+                img.parent.requestDisallowInterceptTouchEvent(false)
                 reset()
             }
             States.SAVE -> {
+                img.parent.requestDisallowInterceptTouchEvent(false)
                 save()
             }
             States.IMPORT_NETWORK -> {
+                img.parent.requestDisallowInterceptTouchEvent(false)
                 importNetwork()
             }
             States.IMPORT_PLAN -> {
+                img.parent.requestDisallowInterceptTouchEvent(false)
                 importPlan()
             }
             States.SEND_NETWORK -> {
-                send()
+                sendNetworkByMail()
             }
         }
     }
 
     /** Fonction pour sauvegarder un graphe **/
     @Throws(IOException::class)
-    fun saveintofile(n: String) {
+    private fun saveintofile(n: String) {
         val path: String = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + n
         if (n.isNotEmpty()) {
             val myf = File(path)
             val outputStream = FileOutputStream(myf)
-            //var myout: OutputStreamWriter = OutputStreamWriter(outputStream)
             val json = Json.encodeToString(ga)
-            //myout.append
-            //outputStream.w
-            // myout.close()
             outputStream.write(json.toByteArray())
             outputStream.flush()
             outputStream.close()
-            Toast.makeText(
-                this,
-                "Graphe" + ga.getTitre() + "sauvegardé avec succés",
-                Toast.LENGTH_LONG
-            ).show()
         }
 
     }
 
     /** Fonction pour recuperer un ancien graphe enregistré **/
     @Throws(IOException::class)
-    fun gettofile(n: String): Graph? {
+    private fun gettofile(n: String): Graph? {
         if (n.isNotEmpty()) {
             val path: String =
                 getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + n
@@ -466,48 +219,51 @@ class MainActivity : AppCompatActivity() {
 
     /** Boite de dialogue pour la creation de noeud **/
     private fun createNodeDialog() {
-        val alertDialog = AlertDialog.Builder(this@MainActivity)
-        val input = EditText(this@MainActivity)
-        alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
-        alertDialog.setMessage(resources.getString(R.string.dialognode_text))
-        alertDialog.setView(input)
-        alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
-            //methode du bouton Valider
-            val valsaisie = input.text.toString()
-            if (ga.getNode(xP, yP) == null) {
+        if (this.ga.getTitre().isEmpty()) {
+            graphTitreDialog()
+        } else {
+            val alertDialog = AlertDialog.Builder(this@MainActivity)
+            alertDialog.setCancelable(false)
+            val input = EditText(this@MainActivity)
+            alertDialog.setTitle(resources.getString(R.string.noeud_etiquette))
+            alertDialog.setMessage(resources.getString(R.string.dialognode_text))
+            alertDialog.setView(input)
+            alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
+                //methode du bouton Valider
+                val valsaisie = input.text.toString()
                 if(valsaisie != ""){
-                    ga.addNode(Node(xP, yP, valsaisie))
-                    //img.invalidate()
-                    img.setImageDrawable(DrawableGraph(ga))
+                    if (ga.getNode(xP, yP) == null) {
+                        ga.addNode(Node(xP, yP, valsaisie))
+                        img.setImageDrawable(DrawableGraph(ga))
+                    } else {
+                        Toast.makeText(
+                            this,
+                            resources.getString(R.string.dialognode_msg),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            } else {
-                Toast.makeText(
-                    this,
-                    resources.getString(R.string.dialognode_msg),
-                    Toast.LENGTH_LONG
-                ).show()
+                dialog.dismiss()
             }
-            dialog.dismiss()
+            alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            alertDialog.show()
         }
-        alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-            dialog.dismiss()
-        }
-        alertDialog.show()
     }
 
     /** Boite de dialogue pour recuperer le titre du graphe  */
-    @SuppressLint("StringFormatInvalid", "SetTextI18n")
-    fun graphTitreDialog() {
+    private fun graphTitreDialog() {
         val alertDialog = AlertDialog.Builder(this@MainActivity)
+        alertDialog.setCancelable(false)
         val input = EditText(this@MainActivity)
         alertDialog.setTitle(resources.getString(R.string.graph_title))
-        alertDialog.setMessage(resources.getString(R.string.dialoggraph_text))
+        alertDialog.setMessage(resources.getString(R.string.dialoggraph_msg)+"\n"+ resources.getString(R.string.dialoggraph_text))
         alertDialog.setView(input)
         alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
             if (input.text != null) {
                 ga.setTitre(input.text.toString())
-                graphTitre.text =
-                    resources.getString(R.string.graph_name_text) + " " + ga.getTitre()
+                (resources.getString(R.string.graph_name_text) + " " + ga.getTitre()).also { graphTitre.text = it }
                 graphTitre.invalidate()
                 dialog.dismiss()
             }
@@ -527,6 +283,8 @@ class MainActivity : AppCompatActivity() {
                 val inputStream: InputStream? = contentResolver.openInputStream(imageUri!!)
                 val bg = Drawable.createFromStream(inputStream, imageUri.toString())
                 img.background = bg
+                Toast.makeText(this, getString(R.string.import_plan_success), Toast.LENGTH_LONG)
+                    .show()
             } catch (e: FileNotFoundException) {
                 e.message
                 Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
@@ -534,12 +292,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /** faire un screenshot du réseau actuel **/
-    private fun screenshot() {
+    /** effectuerMode un screenshot du réseau actuel **/
+    private fun screenshot(): Intent {
         val dirPath = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS).toString() + "/Network_DP"
         } else {
-            TODO("VERSION.SDK_INT < Q")
+            getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/Network_DP"
         }
         val file = File(dirPath)
 
@@ -572,23 +330,318 @@ class MainActivity : AppCompatActivity() {
         /** lancer l'intention de partage **/
         val emailIntent = Intent(Intent.ACTION_SEND)
         emailIntent.type = "image/jpeg"
-        val emailReceiver = arrayOf("arnauld-cyriaque.djedjemel@etudiant.univ-rennes1.fr")
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, emailReceiver)
-        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path))
+        emailIntent.putExtra(
+            Intent.EXTRA_STREAM,
+            FileProvider.getUriForFile(
+                this,
+                this.applicationContext.packageName + ".provider",
+                image
+            )
+        )
         emailIntent.putExtra(
             Intent.EXTRA_SUBJECT,
             resources.getString(R.string.app_name) + " " + resources.getString(R.string.email_subject) + "-" + this.ga.getTitre()
         )
+        return emailIntent
+    }
+
+    /** Bouge les noeuds selon les mouvements de l'utilisateur **/
+    private fun enableReadMode() {
+        val sb = StringBuilder()
+        sb.append(resources.getString(R.string.app_name))
+            .append(" - " + resources.getString(R.string.reading_text))
+        this.title = sb.toString()
+        var selectNode: Node? = null
+        var selectedConnex: Connexion? = null
+        //img.parent.requestDisallowInterceptTouchEvent(false)
+        img.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    downX = event.x
+                    downY = event.y
+                    if (ga.getNode(downX, downY) != null) {
+                        selectNode = ga.getNode(downX, downY)
+                    } else if (ga.getGraphConnexionByMiddlePosition(downX,downY) != null) {
+                        selectedConnex = ga.getGraphConnexionByMiddlePosition(downX,downY)
+                        //selectedConnex!!.mX = downX
+                        //selectedConnex!!.mY = downY
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    selectNode = null
+                    selectedConnex = null
+                   img.parent.requestDisallowInterceptTouchEvent(false)
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    img.parent.requestDisallowInterceptTouchEvent(true)
+                    mX = event.x
+                    mY = event.y
+                    if (selectNode != null) {
+                        if ((mX >= 30F && mX <= imgWidth - 30F) && (mY >= 30F && mY <= imgHeight - 30F)) {
+                            selectNode!!.setPosY(mY)
+                            selectNode!!.setPosX(mX)
+                            img.setImageDrawable(DrawableGraph(ga))
+                        }
+                    } else if (selectedConnex != null) {
+                        selectedConnex!!.isCurved = true
+                        selectedConnex!!.mX = mX
+                        selectedConnex!!.mY = mY
+                        img.setImageDrawable(DrawableGraph(ga))
+                    }
+
+                }
+            }
+            true
+        }
+    }
+
+    /** Renitialise le graphe **/
+    private fun reset() {
+        this.title = resources.getString(R.string.app_name)
+        ga.reset()
+        img.setImageDrawable(DrawableGraph(ga))
+    }
+
+   /** Sauvegarder le graphe dans la mémoire interne **/
+    private fun save() {
+        this.title = resources.getString(R.string.app_name)
+        if (ga.getTitre() != "") {
+            Toast.makeText(this, resources.getString(R.string.dialoggraph_msg), Toast.LENGTH_LONG)
+                .show()
+            saveintofile(ga.getTitre())
+            Toast.makeText(this, getString(R.string.save_success), Toast.LENGTH_LONG).show()
+        }
+    }
+
+   /** Importe un graphe sauvegardé et l'affiche **/
+    private fun importNetwork() {
+        this.title = resources.getString(R.string.app_name)
+        val alertDialog = AlertDialog.Builder(this@MainActivity)
+       alertDialog.setCancelable(false)
+        val input = EditText(this@MainActivity)
+        alertDialog.setTitle(resources.getString(R.string.graph_title))
+        alertDialog.setMessage(resources.getString(R.string.dialoggraph_text))
+        alertDialog.setView(input)
+        alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
+            if (input.text != null) {
+                try {
+                    ga = gettofile(input.text.toString())!!
+                    remakeGraph(ga)
+                    img.invalidate()
+                    img.setImageDrawable(DrawableGraph(ga))
+                    Toast.makeText(this, getString(R.string.import_success), Toast.LENGTH_LONG)
+                        .show()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Toast.makeText(
+                        this,
+                        resources.getString(R.string.import_graph_msg),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                dialog.dismiss()
+
+            }
+        }
+        alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
+    }
+
+    /** Importe une nouvelle image de plan **/
+    private fun importPlan() {
+        this.title = resources.getString(R.string.app_name)
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        startActivityForResult(gallery, pickImage)
+    }
+
+    /**Envoi une capture du graphe par mail **/
+    private fun sendNetworkByMail() {
+        this.title = resources.getString(R.string.app_name)
+        img.parent.requestDisallowInterceptTouchEvent(false)
+        val f = screenshot()
+        this.startActivity(f)
+    }
+
+    /** Ajoute un nouveau noeud au graphe **/
+    private fun addNode() {
+        val sb = StringBuilder()
+        sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.add_object_text))
+        this.title = sb.toString()
+        var time: Long = 0
+        img.parent.requestDisallowInterceptTouchEvent(false)
+        img.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    time = System.currentTimeMillis()
+                }
+                MotionEvent.ACTION_UP -> {
+                    val time1 = System.currentTimeMillis() - time
+                    if (time1 >= ViewConfiguration.getLongPressTimeout()) {
+                        xP = event.x
+                        yP = event.y
+                        if((xP>=30F && xP<=imgWidth-30F) && (yP>=30F && yP<=imgHeight-30F) ){
+                            //Création de la boite de dialogue et de ses actions
+                            createNodeDialog()
+                        }else{
+                            Toast.makeText(this,getString(R.string.node_creation_error),Toast.LENGTH_LONG).show()
+
+                        }
+                    }
+                }
+            }
+            true
+        }
+
+    }
+
+    /**Ajoute une nouvelle connexion au graphe **/
+    private fun addConnexion() {
+        val sb = StringBuilder()
+        sb.append(resources.getString(R.string.app_name))
+            .append(" - "+ resources.getString(R.string.add_connect_text))
+        this.title = sb.toString()
+        var ndepart: Node? = null
+        var ntp: Node?
+        lateinit var nfin: Node
+        //img.parent.requestDisallowInterceptTouchEvent(false)
+        img.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    downX = event.x
+                    downY = event.y
+                    ndepart = ga.getNode(downX, downY)
+                    Log.i("", "Down : ${ndepart.toString()}")
+                }
+                MotionEvent.ACTION_UP -> {
+                    upX = event.x
+                    upY = event.y
+                    val nfintp: Node? = ga.getNode(upX, upY)
+                    if (nfintp != null && ndepart !=null) {
+                        if(nfintp != ndepart){
+                            nfin = nfintp
+                            val c = Connexion(ndepart!!, nfin)
+                            val cbis = Connexion(nfin, ndepart!!)
+                            if(ga.getGraphConnexion(c) == null && ga.getGraphConnexion(cbis) == null){
+                                  createConnectionDialog(c)
+                            }else{
+                                Toast.makeText(this,getString(R.string.connexion_creation_error),Toast.LENGTH_LONG).show()
+                            }
+                        }else {
+                            ga.settmpConnexion(null)
+                            img.invalidate()
+                        }
+
+                    }else{
+                        ga.settmpConnexion(null)
+                        img.invalidate()
+                    }
+                    img.parent.requestDisallowInterceptTouchEvent(false)
+                }
+                MotionEvent.ACTION_MOVE -> {
+                   img.parent.requestDisallowInterceptTouchEvent(true)
+                    mX = event.x
+                    mY = event.y
+                    ntp = Node(mX, mY, "")
+                    if (ndepart != null) {
+                        ga.settmpConnexion(Connexion(ndepart!!, ntp!!))
+                        img.invalidate()
+                    }
+                }
+            }
+            true
+        }
+
+    }
+
+    /** Affiche une dialogue pour saisir le nom de la connexion
+     * Crée la connexion une fois son etiquette validée
+     **/
+    private fun createConnectionDialog(connexion:Connexion) {
+        val alertDialog = AlertDialog.Builder(this@MainActivity)
+        alertDialog.setCancelable(false)
+        val input = EditText(this@MainActivity)
+        alertDialog.setTitle(resources.getString(R.string.connexion_label_text))
+        alertDialog.setMessage(resources.getString(R.string.connexion_label))
+        alertDialog.setView(input)
+        alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
+            //methode du bouton Valider
+            val valsaisie = input.text.toString()
+            if(valsaisie != ""){
+                connexion.setetiquette(valsaisie)
+                ga.addConnexion(connexion)
+                ga.settmpConnexion(null)
+                img.invalidate()
+                dialog.dismiss()
+            }else{
+                Toast.makeText(this,resources.getString(R.string.etiquette_forget_text),Toast.LENGTH_LONG).show()
+            }
+
+        }
+        alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
+    }
+
+    /**Modifie soit les connexions, soit les noeuds du graphe **/
+    private fun enableUpdate() {
+        val sb = StringBuilder()
+        sb.append(resources.getString(R.string.app_name)).append(" - "+ resources.getString(R.string.update))
+        this.title = sb.toString()
+        var time: Long = 0
+       // img.parent.requestDisallowInterceptTouchEvent(false)
+        img.setOnTouchListener { _, event ->
+            //img.parent.requestDisallowInterceptTouchEvent(true)
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    time = System.currentTimeMillis()
+                }
+                MotionEvent.ACTION_UP -> {
+                    val time1 = System.currentTimeMillis() - time
+                    if (time1 >= ViewConfiguration.getLongPressTimeout()) {
+                        xP = event.x
+                        yP = event.y
+                        Log.i("","yes")
+                        if(ga.getNode(xP,yP) != null){
+                            val d = NodeUpdateDialog(this,this.ga,ga.getNode(xP,yP)!!)
+                            d.show()
+                        }else if(ga.getGraphConnexionByMiddlePosition(xP,yP) != null){
+                            val cd = ConnexionUpdateDialog(this,this.ga,ga.getGraphConnexionByMiddlePosition(xP,yP)!!)
+                            cd.show()
+                        }
+                    }
+                }
+            }
+            true
+        }
+
     }
 
     /** Pour sauvegarder l'etat lors de la rotation **/
     override fun onSaveInstanceState(outState: Bundle) {
         val json = Json.encodeToString(ga)
         val json2 = Json.encodeToString(mode)
+        // val d = Json.encodeToString(this.img.background)
         outState.putSerializable("graph", json)
         outState.putSerializable("mode", json2)
+        //outState.putSerializable("drawable",d)
         super.onSaveInstanceState(outState)
     }
-    /** Menu contextuel **/
+
+    private fun remakeGraph(graph:Graph){
+        if(graph.getConnexionList().isNotEmpty()){
+            for(connexion in graph.getConnexionList()){
+                for(node in graph.getNodeList()){
+                    if(connexion.getEmitter().getPosX() == node.getPosX() && connexion.getEmitter().getPosY() == node.getPosY()){
+                       connexion.setEmitter(node)
+                    }else if(connexion.getReceiver().getPosX() == node.getPosX() && connexion.getReceiver().getPosY() == node.getPosY()){
+                        connexion.setReceiver(node)
+                    }
+                }
+            }
+        }
+    }
 
 }

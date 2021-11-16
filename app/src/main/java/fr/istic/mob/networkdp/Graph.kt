@@ -8,11 +8,7 @@ class Graph {
     private val nodes: ArrayList<Node> = ArrayList()
     private val connexions: ArrayList<Connexion> = ArrayList()
     private var tmpConnexion: Connexion? = null
-    private var selectedConnexion: Connexion? = null
 
-    /* constructor(titre: String) {
-         this.titre = titre
-     }*/
     /** Methode pour recuperer le titre **/
     fun getTitre(): String {
         return this.titre
@@ -28,16 +24,6 @@ class Graph {
         return this.tmpConnexion
     }
 
-    /** Methode pour attribuer une connexion selectionnée **/
-    fun setselectedConnexion(c: Connexion?) {
-        this.selectedConnexion = c
-    }
-
-    /** Methode pour recuperer la connexion selectionnée **/
-    fun getselectedConnexion(): Connexion? {
-        return this.selectedConnexion
-    }
-
     /** Methode pour attribuer un nom au graphe **/
     fun setTitre(name: String) {
         this.titre = name
@@ -50,37 +36,42 @@ class Graph {
         }
     }
 
+    /** recupérer un noeud du graphe par la position du centre **/
     fun getNode(x: Float, y: Float): Node? {
         var node: Node? = null
         for (n: Node in nodes) {
-            if ((x >= n.getPosX() - 30F && x <= n.getPosX() + 30F) && (y >= n.getPosY() - 30F && y <= n.getPosY() + 30F)) {
+            if ((x >= n.getPosX() - 50F && x <= n.getPosX() + 50F) && (y >= n.getPosY() - 30F && y <= n.getPosY() + 30F)) {
                 node = n
             }
         }
         return node
     }
 
-    fun getConnexion(x: Float, y: Float): Connexion? {
-        var co: Connexion? = null
-        for (c: Connexion in connexions) {
-            val f = c.getMiddle()
-            if ((x >= c.getMiddle()[0] - 20F && x <= c.getMiddle()[0] + 20F) && (y >= c.getMiddle()[1] - 20F && y <= c.getMiddle()[1] + 20F)) {
-                co = c
+    /** recuprérer une connexion du graphe par la position du milieu **/
+    fun getGraphConnexionByMiddlePosition(x: Float, y: Float): Connexion? {
+        var connexion: Connexion? = null
+        for (c in connexions) {
+            if ((x >= c.getMiddle()[0] - 20F && x <= c.getMiddle()[0] + 20F)
+                && (y >= c.getMiddle()[1] - 20F && y <= c.getMiddle()[1] + 20F)
+            ) {
+                connexion = c
             }
         }
-        return co
+        return connexion
     }
 
-    fun getConnexion(c: Connexion): Connexion? {
-        var con: Connexion? = null
+    /** Verifier si une connexion appartient au graphe **/
+    fun getGraphConnexion(c: Connexion): Connexion? {
+        var connexion: Connexion? = null
         for (co: Connexion in connexions) {
             if (co == c) {
-                con = co
+                connexion = co
             }
         }
-        return con
+        return connexion
     }
 
+    /** Retourne la liste des noeuds du graphe **/
     fun getNodeList(): ArrayList<Node> {
         return this.nodes
     }

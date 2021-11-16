@@ -7,27 +7,30 @@ import kotlinx.serialization.Serializable
 class Node(private var titre: String) {
     private var posX: Float = 0F
     private var posY: Float = 0F
-    private var couleur:Int = Color.RED
+    private var couleur: Int = Color.RED
 
     constructor(posx: Float, posy: Float, titre: String) : this(titre) {
         this.titre = titre
         this.posX = posx
         this.posY = posy
     }
-    fun getcouleur():Int
-    {
+
+    fun getcouleur(): Int {
         return this.couleur
     }
-    fun setcouleur(i:Int)
-    {
-       this.couleur = i
+
+    fun setcouleur(i: Int) {
+        this.couleur = i
     }
+
     fun getTitre(): String {
         return this.titre
     }
-    fun setTitre(s:String) {
-        this.titre =s
+
+    fun setTitre(s: String) {
+        this.titre = s
     }
+
     fun getPosX(): Float {
         return this.posX
     }
@@ -50,10 +53,9 @@ class Node(private var titre: String) {
 
         other as Node
 
-        if (titre != other.titre) return false
-        if (posX != other.posX) return false
-        if (posY != other.posY) return false
-        if (couleur != other.couleur) return false
+        if (this.titre != other.titre) return false
+        if (this.posX != other.posX) return false
+        if (this.posY != other.posY) return false
 
         return true
     }
