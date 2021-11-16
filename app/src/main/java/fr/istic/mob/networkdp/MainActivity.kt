@@ -360,8 +360,8 @@ class MainActivity : AppCompatActivity() {
                     downY = event.y
                     if (ga.getNode(downX, downY) != null) {
                         selectNode = ga.getNode(downX, downY)
-                    } else if (ga.getConnexion(downX, downY) != null) {
-                        selectedConnex = ga.getConnexion(downX, downY)
+                    } else if (ga.getGraphConnexionByMiddlePosition(downX,downY) != null) {
+                        selectedConnex = ga.getGraphConnexionByMiddlePosition(downX,downY)
                         //selectedConnex!!.mX = downX
                         //selectedConnex!!.mY = downY
                     }
@@ -379,13 +379,13 @@ class MainActivity : AppCompatActivity() {
                         if ((mX >= 30F && mX <= imgWidth - 30F) && (mY >= 30F && mY <= imgHeight - 30F)) {
                             selectNode!!.setPosY(mY)
                             selectNode!!.setPosX(mX)
-                            img.invalidate()
+                            img.setImageDrawable(DrawableGraph(ga))
                         }
                     } else if (selectedConnex != null) {
                         selectedConnex!!.isCurved = true
                         selectedConnex!!.mX = mX
                         selectedConnex!!.mY = mY
-                        img.invalidate()
+                        img.setImageDrawable(DrawableGraph(ga))
                     }
 
                 }
@@ -511,7 +511,6 @@ class MainActivity : AppCompatActivity() {
                     downY = event.y
                     ndepart = ga.getNode(downX, downY)
                     Log.i("", "Down : ${ndepart.toString()}")
-                    false
                 }
                 MotionEvent.ACTION_UP -> {
                     upX = event.x
@@ -522,7 +521,7 @@ class MainActivity : AppCompatActivity() {
                             nfin = nfintp
                             val c = Connexion(ndepart!!, nfin)
                             val cbis = Connexion(nfin, ndepart!!)
-                            if(ga.getConnexion(c) == null && ga.getConnexion(cbis) == null){
+                            if(ga.getGraphConnexion(c) == null && ga.getGraphConnexion(cbis) == null){
                                   createConnectionDialog(c)
                             }else{
                                 Toast.makeText(this,getString(R.string.connexion_creation_error),Toast.LENGTH_LONG).show()
@@ -536,11 +535,10 @@ class MainActivity : AppCompatActivity() {
                         ga.settmpConnexion(null)
                         img.invalidate()
                     }
-                    //img.parent.requestDisallowInterceptTouchEvent(false)
-                    true
+                    img.parent.requestDisallowInterceptTouchEvent(false)
                 }
                 MotionEvent.ACTION_MOVE -> {
-                   // img.parent.requestDisallowInterceptTouchEvent(true)
+                   img.parent.requestDisallowInterceptTouchEvent(true)
                     mX = event.x
                     mY = event.y
                     ntp = Node(mX, mY, "")
@@ -548,10 +546,9 @@ class MainActivity : AppCompatActivity() {
                         ga.settmpConnexion(Connexion(ndepart!!, ntp!!))
                         img.invalidate()
                     }
-                    false
                 }
             }
-            false
+            true
         }
 
     }
@@ -608,8 +605,8 @@ class MainActivity : AppCompatActivity() {
                         if(ga.getNode(xP,yP) != null){
                             val d = NodeUpdateDialog(this,this.ga,ga.getNode(xP,yP)!!)
                             d.show()
-                        }else if(ga.getConnexion(xP,yP) != null){
-                            val cd = ConnexionUpdateDialog(this,this.ga,ga.getConnexion(xP,yP)!!)
+                        }else if(ga.getGraphConnexionByMiddlePosition(xP,yP) != null){
+                            val cd = ConnexionUpdateDialog(this,this.ga,ga.getGraphConnexionByMiddlePosition(xP,yP)!!)
                             cd.show()
                         }
                     }

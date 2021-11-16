@@ -5,8 +5,7 @@ import android.graphics.Path
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import android.graphics.PathMeasure
-
-
+import kotlin.io.path.Path
 
 
 @Serializable
@@ -19,14 +18,11 @@ class Connexion(private var debut: Node) {
     var isCurved: Boolean = false
     var mX: Float = 0F
     var mY: Float = 0F
-    @Contextual
-    private var myPath:Path = Path()
+    private var myPath:ConnexionPath = ConnexionPath()
 
     constructor(debut: Node, fin: Node) : this(debut) {
         this.debut = debut
         this.fin = fin
-        myPath.moveTo(this.debut.getPosX(), this.debut.getPosX())
-        myPath.lineTo(fin.getPosX(),fin.getPosY())
     }
 
     /**
@@ -74,8 +70,8 @@ class Connexion(private var debut: Node) {
     }
     /** getters du path de la connexion **/
     fun getPath():Path{
+        myPath = ConnexionPath()
         if(isCurved){
-            myPath = Path()
             myPath.moveTo(this.debut.getPosX(), this.debut.getPosX())
             myPath.quadTo(
                 (middlePosition[0] + mX) / 2,
@@ -84,6 +80,9 @@ class Connexion(private var debut: Node) {
                 fin.getPosY()
             )
 
+        }else{
+            myPath.moveTo(this.debut.getPosX(), this.debut.getPosY())
+            myPath.lineTo(this.fin.getPosX(),this.fin.getPosY())
         }
         calculMiddle(myPath)
         return myPath

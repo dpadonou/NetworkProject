@@ -48,10 +48,9 @@ class Graph {
     }
 
     /** recuprérer une connexion du graphe par la position du milieu **/
-    fun getConnexion(x: Float, y: Float): Connexion? {
+    fun getGraphConnexionByMiddlePosition(x: Float, y: Float): Connexion? {
         var connexion: Connexion? = null
         for (c in connexions) {
-            //c.getMiddle()
             if ((x >= c.getMiddle()[0] - 20F && x <= c.getMiddle()[0] + 20F)
                 && (y >= c.getMiddle()[1] - 20F && y <= c.getMiddle()[1] + 20F)
             ) {
@@ -62,7 +61,7 @@ class Graph {
     }
 
     /** Verifier si une connexion appartient au graphe **/
-    fun getConnexion(c: Connexion): Connexion? {
+    fun getGraphConnexion(c: Connexion): Connexion? {
         var connexion: Connexion? = null
         for (co: Connexion in connexions) {
             if (co == c) {
