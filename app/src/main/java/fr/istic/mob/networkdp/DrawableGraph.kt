@@ -34,13 +34,12 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
 
     /** Dessine les connexions du graphe **/
     private fun drawConnexions(n: ArrayList<Connexion>) {
-        //val p = Path()
         if (n.isNotEmpty()) {
             for (i in n) {
-                pathPaint.strokeWidth = i.getEpaisseur()
-                pathPaint.color = i.getcouleur()
+                pathPaint.strokeWidth = i.getThickness()
+                pathPaint.color = i.getColor()
                 c.drawPath(i.getPath(), pathPaint)
-                c.drawText(i.getetiquette(), i.getMiddle()[0], i.getMiddle()[1], textPaint)
+                c.drawText(i.getTag(), i.getMiddle()[0], i.getMiddle()[1], textPaint)
                 /*pathPaint.strokeWidth = i.getEpaisseur()
                 pathPaint.color = i.getcouleur()
                 val pos: FloatArray = i.getMiddle()
@@ -73,8 +72,8 @@ class DrawableGraph(private var ga: Graph) : Drawable() {
     private fun drawTempConnexion(tempConnexion: Connexion?) {
         val p = Path()
         if (tempConnexion != null) {
-            pathtempPaint.strokeWidth = tempConnexion.getEpaisseur()
-            pathtempPaint.color = tempConnexion.getcouleur()
+            pathtempPaint.strokeWidth = tempConnexion.getThickness()
+            pathtempPaint.color = tempConnexion.getColor()
             p.moveTo(tempConnexion.getEmitter().getPosX(), tempConnexion.getEmitter().getPosY())
             //p.quadTo(tempConnexion.getEmitter().getPosX(),tempConnexion.getEmitter().getPosY(),tempConnexion.getReceiver().getPosX(),tempConnexion.getReceiver().getPosY())
             p.lineTo(tempConnexion.getReceiver().getPosX(), tempConnexion.getReceiver().getPosY())

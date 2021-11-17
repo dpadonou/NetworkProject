@@ -12,7 +12,11 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 
-class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph, private var c: Connexion) : Dialog(m) {
+class ConnexionUpdateDialog(
+    private var m: MainActivity,
+    private var ga: Graph,
+    private var c: Connexion
+) : Dialog(m) {
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +39,9 @@ class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph
             updateConnectionWidth(this.c)
         }
     }
+
     /** Affiche une dialogue de confirmation et supprime une connexion **/
-    private fun deleteConnection(connexion:Connexion){
+    private fun deleteConnection(connexion: Connexion) {
         val alertDialog = AlertDialog.Builder(this.context)
         alertDialog.setTitle(this.context.getString(R.string.confirm_text))
         alertDialog.setMessage(context.getString(R.string.confirm_drop_connexion))
@@ -49,7 +54,7 @@ class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph
                 ).show()
                 dialog.dismiss()
                 this.m.getImg().invalidate()
-               // this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
+                // this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                 this.dismiss()
             } else {
                 dialog.dismiss()
@@ -65,7 +70,7 @@ class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph
      * Affiche une boite de dialogue pour entrer une nouvelle valeur pour l'etiquette
      * Modifie l'etiquette de la connexion passé en paramètre
      **/
-    private fun updateConnectionLabel(connexion:Connexion){
+    private fun updateConnectionLabel(connexion: Connexion) {
         val alertDialog = AlertDialog.Builder(this.m)
         alertDialog.setCancelable(false)
         val input = EditText(this.m)
@@ -77,7 +82,7 @@ class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph
             //methode du bouton Valider
             input.text.toString()
             if (input.text != null) {
-                connexion.setetiquette(input.text.toString())
+                connexion.setTag(input.text.toString())
                 this.m.getImg().invalidate()
                 this.dismiss()
             } else {
@@ -99,7 +104,7 @@ class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph
      * Affiche une boite de dialogue pour selectionner une couleur
      * Modifie la couleur de la connexion passé en paramètre
      **/
-    private fun updateConnectionColor(connexion:Connexion){
+    private fun updateConnectionColor(connexion: Connexion) {
         val alertDialog = AlertDialog.Builder(this.m)
         alertDialog.setCancelable(false)
         alertDialog.setTitle(context.getString(R.string.connexion_color_title))
@@ -122,7 +127,7 @@ class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph
         }
         alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
             if (check != 0) {
-                connexion.setcouleur(check)
+                connexion.setColor(check)
                 this.m.getImg().invalidate()
                 //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
                 this.dismiss()
@@ -139,7 +144,7 @@ class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph
      * Affiche une boite de dialogue pour selectionner une epaisseur
      * Modifie l'epaisseur de la connexion passé en paramètre
      **/
-    private fun updateConnectionWidth(connexion:Connexion){
+    private fun updateConnectionWidth(connexion: Connexion) {
         val alertDialog = AlertDialog.Builder(this.m)
         alertDialog.setCancelable(false)
         alertDialog.setTitle(context.getString(R.string.connexion_width_title))
@@ -158,7 +163,7 @@ class ConnexionUpdateDialog( private var m: MainActivity,  private var ga: Graph
         }
         alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
             if (check != 0F) {
-                connexion.setEpaisseur(check)
+                connexion.setThickness(check)
                 this.m.getImg().invalidate()
                 this.dismiss()
             }

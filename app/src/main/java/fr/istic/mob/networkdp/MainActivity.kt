@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             remakeGraph(ga)
             img.setImageDrawable(DrawableGraph(ga))
             img.invalidate()
-            effectuerMode(mode)
+            doSomething(mode)
         }else{
             graphTitreDialog()
             Toast.makeText(this,resources.getString(R.string.dialoggraph_msg),Toast.LENGTH_LONG).show()
@@ -96,54 +96,54 @@ class MainActivity : AppCompatActivity() {
             //Lorsqu'on clique sur ajouter objet
             R.id.add_object -> {
                 mode = States.ADDING_NODE
-                effectuerMode(mode)
+                doSomething(mode)
             }
             //Lorsqu'on clique sur Modifier objet
             R.id.reading_mode -> {
                 mode = States.READING_MODE
-                effectuerMode(mode)
+                doSomething(mode)
             }
             //Lorsqu'on clique sur ajouter Connexion
             R.id.add_connect -> {
                 mode = States.ADDING_CONNEXION
-                effectuerMode(mode)
+                doSomething(mode)
             }
             //Lorsqu'on clique sur modifier connexion
             R.id.update -> {
                 mode = States.UPDATE_MODE
-                effectuerMode(mode)
+                doSomething(mode)
             }
             //Lorsqu'on clique sur renitialiser le graphe
             R.id.reset -> {
                 mode = States.RESET
-                effectuerMode(mode)
+                doSomething(mode)
             }
             //Lorsqu'on clique sur Sauvegarder le graphe
             R.id.save -> {
                 mode = States.SAVE
-                effectuerMode(mode)
+                doSomething(mode)
             }
             //Lorsqu'on clique sur importer un graphe
             R.id.import_graph -> {
                 mode = States.IMPORT_NETWORK
-                effectuerMode(mode)
+                doSomething(mode)
             }
             //Lorsqu'on clique sur importer de nouveau plan
             R.id.import_plan -> {
                 mode = States.IMPORT_PLAN
-                effectuerMode(mode)
+                doSomething(mode)
             }
             //Lorsqu'on clique sur envoyer la capture du graphe
             R.id.send_network -> {
                 mode = States.SEND_NETWORK
-                effectuerMode(mode)
+                doSomething(mode)
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     /** Gerer les modes **/
-    private fun effectuerMode(m: States) {
+    private fun doSomething(m: States) {
         when (m) {
             States.ADDING_CONNEXION -> {
                 addConnexion()
@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity() {
 
     /** Fonction pour sauvegarder un graphe **/
     @Throws(IOException::class)
-    private fun saveintofile(n: String) {
+    private fun saveIntoFile(n: String) {
         val path: String = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + n
         if (n.isNotEmpty()) {
             val myf = File(path)
@@ -191,12 +191,11 @@ class MainActivity : AppCompatActivity() {
             outputStream.flush()
             outputStream.close()
         }
-
     }
 
     /** Fonction pour recuperer un ancien graphe enregistré **/
     @Throws(IOException::class)
-    private fun gettofile(n: String): Graph? {
+    private fun getFromFile(n: String): Graph? {
         if (n.isNotEmpty()) {
             val path: String =
                 getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + n
@@ -214,7 +213,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             return null
         }
-
     }
 
     /** Boite de dialogue pour la creation de noeud **/
@@ -293,7 +291,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** effectuerMode un screenshot du réseau actuel **/
-    private fun screenshot(): Intent {
+    private fun screenShot(): Intent {
         val dirPath = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS).toString() + "/Network_DP"
         } else {
@@ -353,7 +351,6 @@ class MainActivity : AppCompatActivity() {
         this.title = sb.toString()
         var selectNode: Node? = null
         var selectedConnex: Connexion? = null
-        //img.parent.requestDisallowInterceptTouchEvent(false)
         img.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -363,8 +360,6 @@ class MainActivity : AppCompatActivity() {
                         selectNode = ga.getNode(downX, downY)
                     } else if (ga.getGraphConnexionByMiddlePosition(downX,downY) != null) {
                         selectedConnex = ga.getGraphConnexionByMiddlePosition(downX,downY)
-                        //selectedConnex!!.mX = downX
-                        //selectedConnex!!.mY = downY
                     }
                 }
                 MotionEvent.ACTION_UP -> {
@@ -388,7 +383,6 @@ class MainActivity : AppCompatActivity() {
                         selectedConnex!!.mY = mY
                         img.setImageDrawable(DrawableGraph(ga))
                     }
-
                 }
             }
             true
@@ -408,7 +402,7 @@ class MainActivity : AppCompatActivity() {
         if (ga.getTitre() != "") {
             Toast.makeText(this, resources.getString(R.string.dialoggraph_msg), Toast.LENGTH_LONG)
                 .show()
-            saveintofile(ga.getTitre())
+            saveIntoFile(ga.getTitre())
             Toast.makeText(this, getString(R.string.save_success), Toast.LENGTH_LONG).show()
         }
     }
@@ -425,7 +419,7 @@ class MainActivity : AppCompatActivity() {
         alertDialog.setPositiveButton(resources.getString(R.string.valider_text)) { dialog, _ ->
             if (input.text != null) {
                 try {
-                    ga = gettofile(input.text.toString())!!
+                    ga = getFromFile(input.text.toString())!!
                     remakeGraph(ga)
                     img.invalidate()
                     img.setImageDrawable(DrawableGraph(ga))
@@ -440,7 +434,6 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                 }
                 dialog.dismiss()
-
             }
         }
         alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
@@ -460,7 +453,7 @@ class MainActivity : AppCompatActivity() {
     private fun sendNetworkByMail() {
         this.title = resources.getString(R.string.app_name)
         img.parent.requestDisallowInterceptTouchEvent(false)
-        val f = screenshot()
+        val f = screenShot()
         this.startActivity(f)
     }
 
@@ -569,7 +562,7 @@ class MainActivity : AppCompatActivity() {
             //methode du bouton Valider
             val valsaisie = input.text.toString()
             if(valsaisie != ""){
-                connexion.setetiquette(valsaisie)
+                connexion.setTag(valsaisie)
                 ga.addConnexion(connexion)
                 ga.settmpConnexion(null)
                 img.invalidate()

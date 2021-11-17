@@ -1,5 +1,6 @@
 package fr.istic.mob.networkdp
 
+import android.graphics.RectF
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -40,7 +41,8 @@ class Graph {
     fun getNode(x: Float, y: Float): Node? {
         var node: Node? = null
         for (n: Node in nodes) {
-            if ((x >= n.getPosX() - 50F && x <= n.getPosX() + 50F) && (y >= n.getPosY() - 30F && y <= n.getPosY() + 30F)) {
+            val rect = RectF(n.getPosX()-50, n.getPosY()+30, n.getPosX()+50, n.getPosY()-30)
+            if(x >= rect.left && x < rect.right && y <= rect.top && y > rect.bottom) {
                 node = n
             }
         }
@@ -101,11 +103,14 @@ class Graph {
 
     /** methode pour supprimer un noeud **/
     fun deleteNode(n: Node): Boolean {
-        for (co: Connexion in connexions) {
-            if (co.getEmitter() == n || co.getReceiver() == n) {
-                this.connexions.remove(co)
+        val iterator = connexions.iterator()
+        while(iterator.hasNext()){
+            val item = iterator.next()
+            if (item.getEmitter() == n || item.getReceiver() == n) {
+                iterator.remove()
             }
         }
+
         this.nodes.remove(n)
         return true
     }

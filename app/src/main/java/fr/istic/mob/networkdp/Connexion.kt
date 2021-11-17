@@ -2,18 +2,16 @@ package fr.istic.mob.networkdp
 
 import android.graphics.Color
 import android.graphics.Path
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
 import android.graphics.PathMeasure
-import kotlin.io.path.Path
+import kotlinx.serialization.Serializable
 
 
 @Serializable
-class Connexion(private var debut: Node) {
-    private lateinit var fin: Node
-    private var etiquette: String = ""
-    private var couleur: Int = Color.YELLOW
-    private var epaisseur: Float = 20F
+class Connexion(private var startNode: Node) {
+    private lateinit var endNode: Node
+    private var tag: String = ""
+    private var color: Int = Color.YELLOW
+    private var thickness: Float = 20F
     private var middlePosition = FloatArray(2)
     var isCurved: Boolean = false
     var mX: Float = 0F
@@ -21,76 +19,76 @@ class Connexion(private var debut: Node) {
     private var myPath:ConnexionPath = ConnexionPath()
 
     constructor(debut: Node, fin: Node) : this(debut) {
-        this.debut = debut
-        this.fin = fin
+        this.startNode = debut
+        this.endNode = fin
     }
 
     /**
      * getters et setters pour le noeud de depart de la connexion
      */
     fun getEmitter(): Node {
-        return this.debut
+        return this.startNode
     }
     fun setEmitter(node:Node) {
-        this.debut = node
+        this.startNode = node
     }
 
     /**
      * getters et setters pour le noeud de fin de la connexion
      */
     fun getReceiver(): Node {
-        return this.fin
+        return this.endNode
     }
     fun setReceiver(node:Node) {
-        this.fin = node
+        this.endNode = node
     }
 
     /**
      * getters et setters pour l'etiquette de la connexion
      */
-    fun getetiquette(): String {
-        return this.etiquette
+    fun getTag(): String {
+        return this.tag
     }
 
-    fun setetiquette(s: String) {
-        this.etiquette = s
+    fun setTag(s: String) {
+        this.tag = s
     }
 
     /** getters et setters pour la couleur **/
-    fun getcouleur(): Int {
-        return this.couleur
+    fun getColor(): Int {
+        return this.color
     }
 
-    fun setcouleur(i: Int) {
-        this.couleur = i
+    fun setColor(i: Int) {
+        this.color = i
     }
 
 
     /** getters et setters pour l'epaisseur **/
-    fun getEpaisseur(): Float {
-        return this.epaisseur
+    fun getThickness(): Float {
+        return this.thickness
     }
 
-    fun setEpaisseur(f: Float) {
-        this.epaisseur = f
+    fun setThickness(f: Float) {
+        this.thickness = f
     }
     /** getters du path de la connexion **/
     fun getPath():Path{
         myPath = ConnexionPath()
         if(isCurved){
-            myPath.moveTo(this.debut.getPosX(), this.debut.getPosX())
+            myPath.moveTo(this.startNode.getPosX(), this.startNode.getPosY())
             myPath.quadTo(
                 (middlePosition[0] + mX) / 2,
                 (middlePosition[1] + mY) / 2,
-                fin.getPosX(),
-                fin.getPosY()
+                endNode.getPosX(),
+                endNode.getPosY()
             )
 
         }else{
-            myPath.moveTo(this.debut.getPosX(), this.debut.getPosY())
-            myPath.lineTo(this.fin.getPosX(),this.fin.getPosY())
+            myPath.moveTo(this.startNode.getPosX(), this.startNode.getPosY())
+            myPath.lineTo(this.endNode.getPosX(),this.endNode.getPosY())
         }
-        calculMiddle(myPath)
+        calculMiddle()
         return myPath
     }
 
@@ -99,7 +97,7 @@ class Connexion(private var debut: Node) {
         return this.middlePosition
     }
 
-    private fun calculMiddle(p:Path){
+    private fun calculMiddle(){
         val pm = PathMeasure(myPath, false)
         pm.getPosTan(pm.length * 0.5f, middlePosition, null)
     }
@@ -110,19 +108,19 @@ class Connexion(private var debut: Node) {
 
         other as Connexion
 
-        if (this.debut != other.debut) return false
-        if (this.fin != other.fin) return false
-        if (this.etiquette != other.etiquette) return false
+        if (this.startNode != other.startNode) return false
+        if (this.endNode != other.endNode) return false
+        if (this.tag != other.tag) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = debut.hashCode()
-        result = 31 * result + fin.hashCode()
-        result = 31 * result + etiquette.hashCode()
-        result = 31 * result + couleur
-        result = 31 * result + epaisseur.hashCode()
+        var result = startNode.hashCode()
+        result = 31 * result + endNode.hashCode()
+        result = 31 * result + tag.hashCode()
+        result = 31 * result + color
+        result = 31 * result + thickness.hashCode()
         result = 31 * result + isCurved.hashCode()
         result = 31 * result + mX.hashCode()
         result = 31 * result + mY.hashCode()
