@@ -14,18 +14,11 @@
     <item
         android:id="@+id/send_network"
         android:title="@string/envoyer_la_capture_du_graphe" />
-    <item android:title="@string/mode_creation_text" >
-        <menu>
-            <item
-                android:id="@+id/add_connect"
-                android:title="@string/add_connect_text" />
-            <item android:title="@string/add_object_text" android:id="@+id/add_object"/>
+    <item android:title="@string/add_connect_text" android:id="@+id/add_connect"/>
 
-            <item android:title="@string/reading_text" android:id="@+id/reading_mode"/>
+    <item android:title="@string/add_object_text" android:id="@+id/add_object"/>
 
-            <item android:title="@string/update" android:id="@+id/update"/>
-        </menu>
-    </item>
+    <item android:title="@string/reading_text" android:id="@+id/reading_mode"/>
 
-
+    <item android:title="@string/update" android:id="@+id/update"/>
 </menu>

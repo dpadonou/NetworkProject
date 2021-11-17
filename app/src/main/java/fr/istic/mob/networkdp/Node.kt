@@ -1,4 +1,4 @@
-package fr.istic.mob.networkDP
+package fr.istic.mob.networkdp
 
 import android.graphics.Color
 import kotlinx.serialization.Serializable

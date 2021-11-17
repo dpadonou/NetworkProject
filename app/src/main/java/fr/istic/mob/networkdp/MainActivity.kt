@@ -1,4 +1,4 @@
-package fr.istic.mob.networkDP
+package fr.istic.mob.networkdp
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -518,12 +518,10 @@ class MainActivity : AppCompatActivity() {
                             val cbis = Connexion(nfin, ndepart!!)
                             if(ga.getGraphConnexion(c) == null && ga.getGraphConnexion(cbis) == null){
                                   createConnectionDialog(c)
-                            }
-                            else{
+                            }else{
                                 Toast.makeText(this,getString(R.string.connexion_creation_error),Toast.LENGTH_LONG).show()
                             }
-                        }
-                        else {
+                        }else {
                             ga.settmpConnexion(null)
                             img.invalidate()
                         }
@@ -570,17 +568,12 @@ class MainActivity : AppCompatActivity() {
                 img.invalidate()
                 dialog.dismiss()
             }else{
-                ga.settmpConnexion(null)
-                img.invalidate()
                 Toast.makeText(this,resources.getString(R.string.etiquette_forget_text),Toast.LENGTH_LONG).show()
             }
 
         }
         alertDialog.setNegativeButton(resources.getString(R.string.annuler_text)) { dialog, _ ->
-            ga.settmpConnexion(null)
-            img.invalidate()
             dialog.dismiss()
-
         }
         alertDialog.show()
     }
@@ -629,7 +622,7 @@ class MainActivity : AppCompatActivity() {
         //outState.putSerializable("drawable",d)
         super.onSaveInstanceState(outState)
     }
-    /** Reactive les connexions entre les noeuds après rotatio ou importation **/
+
     private fun remakeGraph(graph:Graph){
         if(graph.getConnexionList().isNotEmpty()){
             for(connexion in graph.getConnexionList()){

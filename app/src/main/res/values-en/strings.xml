@@ -66,5 +66,4 @@
     <string name="save_success">Successful backup</string>
     <string name="import_success">Successful import</string>
     <string name="import_plan_success">New plan successfully imported</string>
-    <string name="mode_creation_text">Creation Mode</string>
 </resources>
