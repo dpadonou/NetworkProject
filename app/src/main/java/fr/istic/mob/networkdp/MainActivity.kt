@@ -1,4 +1,4 @@
-package fr.istic.mob.networkdp
+package fr.istic.mob.networkDP
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
