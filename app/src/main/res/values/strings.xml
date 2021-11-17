@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">NetworkDP</string>
+    <string name="app_name" translatable="false">NetworkDjedjemel/Padonou</string>
 
     <string name="reset_text" >Renitialiser le reseau</string>
 
@@ -68,6 +68,7 @@
     <string name="save_success">Sauvegarde réussie</string>
     <string name="import_success">Importation réussie</string>
     <string name="import_plan_success">Nouveau plan importé avec succès</string>
+    <string name="mode_creation_text">Mode creation</string>
 
 
 </resources>

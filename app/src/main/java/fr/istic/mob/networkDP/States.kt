@@ -1,4 +1,4 @@
-package fr.istic.mob.networkdp
+package fr.istic.mob.networkDP
 
 import kotlinx.serialization.Serializable
 

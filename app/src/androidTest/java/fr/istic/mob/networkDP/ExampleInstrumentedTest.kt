@@ -1,4 +1,4 @@
-package fr.istic.mob.networkdp
+package fr.istic.mob.networkDP
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

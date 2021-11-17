@@ -1,4 +1,4 @@
-package fr.istic.mob.networkdp
+package fr.istic.mob.networkDP
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -12,41 +12,39 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 
-class ConnexionUpdateDialog(
-    private var m: MainActivity,
-    private var ga: Graph,
-    private var c: Connexion
-) : Dialog(m) {
+class NodeUpdateDialog(private var m: MainActivity, private var ga: Graph, private var n: Node) : Dialog(m) {
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.update_connexion)
-        /** Supprimez la connexion **/
+        setContentView(R.layout.update_node)
+        /** Supprimez le noeud **/
         findViewById<Button>(R.id.btn_delete_connex).setOnClickListener {
-            deleteConnection(this.c)
+            deleteNode(this.n)
         }
-        /** Modifier l'etiquette de la connexion **/
+
+        /** Modifier l'etiquette du noeud **/
         findViewById<Button>(R.id.btn_connex_etiq_update).setOnClickListener {
-            updateConnectionLabel(this.c)
+            updateNodeLabel(this.n)
         }
-        /** Modifiez la couleur de la connexion **/
+
+        /** modifiez la couleur **/
         findViewById<Button>(R.id.btn_modify_connexColor).setOnClickListener {
-            updateConnectionColor(this.c)
-        }
-        /** Modifiez l'epaisseur de la connexion **/
-        findViewById<Button>(R.id.btn_modifiy_connexWidth).setOnClickListener {
-            updateConnectionWidth(this.c)
+            updateNodeColor(this.n)
         }
     }
 
-    /** Affiche une dialogue de confirmation et supprime une connexion **/
-    private fun deleteConnection(connexion: Connexion) {
+    /**
+     * Affiche une dialogue de confirmation
+     *Supprime le noeud passé en paramètre si l'utilisateur confirme la suppression
+     */
+    private fun deleteNode(node:Node){
         val alertDialog = AlertDialog.Builder(this.context)
-        alertDialog.setTitle(this.context.getString(R.string.confirm_text))
-        alertDialog.setMessage(context.getString(R.string.confirm_drop_connexion))
+        alertDialog.setCancelable(false)
+        alertDialog.setTitle(context.getString(R.string.confirm_text))
+        alertDialog.setMessage(context.getString(R.string.confim_drop_node))
         alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
-            if (this.ga.deleteConnexion(connexion)) {
+            if (this.ga.deleteNode(node)) {
                 Toast.makeText(
                     this.context,
                     context.getString(R.string.drop_success_text),
@@ -54,7 +52,6 @@ class ConnexionUpdateDialog(
                 ).show()
                 dialog.dismiss()
                 this.m.getImg().invalidate()
-                // this.m.getImg().setImageDrawable(DrawableGraph(this.ga))
                 this.dismiss()
             } else {
                 dialog.dismiss()
@@ -65,30 +62,27 @@ class ConnexionUpdateDialog(
         }
         alertDialog.show()
     }
-
     /**
-     * Affiche une boite de dialogue pour entrer une nouvelle valeur pour l'etiquette
-     * Modifie l'etiquette de la connexion passé en paramètre
-     **/
-    private fun updateConnectionLabel(connexion: Connexion) {
+     * Affiche une dialogue pour entrer une nouvelle valeur d'etiquette
+     * Modifie l'etiquette du noeud passé en paramètre
+     */
+    private fun updateNodeLabel(node:Node){
         val alertDialog = AlertDialog.Builder(this.m)
         alertDialog.setCancelable(false)
         val input = EditText(this.m)
-        //input.text = connexion.getetiquette()
-        alertDialog.setTitle(context.getString(R.string.connexion_label_text))
-        alertDialog.setMessage(context.getString(R.string.connexion_label))
+        alertDialog.setTitle(this.m.resources.getString(R.string.noeud_etiquette))
+        alertDialog.setMessage(this.m.resources.getString(R.string.dialognode_text))
         alertDialog.setView(input)
         alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
             //methode du bouton Valider
-            input.text.toString()
-            if (input.text != null) {
-                connexion.setTag(input.text.toString())
+            if (input.text != null && input.text.toString() != "") {
+                node.setTitre(input.text.toString())
                 this.m.getImg().invalidate()
                 this.dismiss()
             } else {
                 Toast.makeText(
                     this.m,
-                    context.getString(R.string.etiquette_forget_text),
+                    context.getString(R.string.node_etiquette_modify),
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -101,13 +95,13 @@ class ConnexionUpdateDialog(
     }
 
     /**
-     * Affiche une boite de dialogue pour selectionner une couleur
-     * Modifie la couleur de la connexion passé en paramètre
-     **/
-    private fun updateConnectionColor(connexion: Connexion) {
+     * Affiche une dialogue pour selectionner la couleur
+     * Modifie la couleur du noeud passé en paramètre
+     */
+    private fun updateNodeColor(node:Node){
         val alertDialog = AlertDialog.Builder(this.m)
         alertDialog.setCancelable(false)
-        alertDialog.setTitle(context.getString(R.string.connexion_color_title))
+        alertDialog.setTitle(context.getString(R.string.node_color_title))
         alertDialog.setMessage(context.getString(R.string.color_text))
         val inflater: LayoutInflater = this.layoutInflater
         val dv: View = inflater.inflate(R.layout.layout_color_node, null)
@@ -125,54 +119,19 @@ class ConnexionUpdateDialog(
                 R.id.noirradio -> check = Color.BLACK
             }
         }
+
         alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
             if (check != 0) {
-                connexion.setColor(check)
-                this.m.getImg().invalidate()
-                //this.m.getimg().setImageDrawable(DrawableGraph(this.ga))
-                this.dismiss()
-            }
-            dialog.dismiss()
-        }
-        alertDialog.setNegativeButton(this.m.resources.getString(R.string.annuler_text)) { dialog, _ ->
-            dialog.dismiss()
-        }
-        alertDialog.show()
-    }
-
-    /**
-     * Affiche une boite de dialogue pour selectionner une epaisseur
-     * Modifie l'epaisseur de la connexion passé en paramètre
-     **/
-    private fun updateConnectionWidth(connexion: Connexion) {
-        val alertDialog = AlertDialog.Builder(this.m)
-        alertDialog.setCancelable(false)
-        alertDialog.setTitle(context.getString(R.string.connexion_width_title))
-        alertDialog.setMessage(context.getString(R.string.connexion_width_text))
-        val inflater: LayoutInflater = this.layoutInflater
-        val dv: View = inflater.inflate(R.layout.layout_connexion_width, null)
-        alertDialog.setView(dv)
-        val rg2 = dv.findViewById<RadioGroup>(R.id.rgWidth)
-        var check = 0F
-        rg2.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.btn_connex_small -> check = 10F
-                R.id.btn_connex_medium -> check = 20F
-                R.id.btn_connex_large -> check = 40F
-            }
-        }
-        alertDialog.setPositiveButton(this.m.resources.getString(R.string.valider_text)) { dialog, _ ->
-            if (check != 0F) {
-                connexion.setThickness(check)
+                node.setcouleur(check)
                 this.m.getImg().invalidate()
                 this.dismiss()
             }
             dialog.dismiss()
         }
+
         alertDialog.setNegativeButton(this.m.resources.getString(R.string.annuler_text)) { dialog, _ ->
             dialog.dismiss()
         }
         alertDialog.show()
     }
-
 }
